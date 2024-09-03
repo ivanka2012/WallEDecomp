@@ -1,0 +1,9 @@
+/*
+Dialog_CHANGELEVELDEMO::Dialog_CHANGELEVELDEMO(void)	__text	000F9B16	00000032	0000001C	00000004	R	.	.	.	.	.	B	T	.
+Dialog_CHANGELEVELDEMO::Remove(void)	__text	000F9B48	0000006F	0000002C	00000004	R	.	.	.	.	.	B	T	.
+Dialog_CHANGELEVELDEMO::MenuActivated(void)	__text	000F9BB8	00000005	00000004	00000004	R	.	.	.	.	.	B	T	.
+Dialog_CHANGELEVELDEMO::DispatchMessages(void)	__text	000F9BBE	00000009	00000004	00000004	R	.	.	.	.	.	B	T	.
+Dialog_CHANGELEVELDEMO::BackPressed(void)	__text	000F9BC8	00000009	00000004	00000004	R	.	.	.	.	.	B	T	.
+Dialog_CHANGELEVELDEMO::InitDialog(void)	__text	000F9BD2	00000394	000000AC	00000004	R	.	.	.	.	.	B	T	.
+Dialog_CHANGELEVELDEMO::Event_Valid(CWindowHierarchy_G *,CUserValue_G const&)	__text	000F9F66	000001B9	0000004C	0000000C	R	.	.	.	.	.	B	T	.
+*/
