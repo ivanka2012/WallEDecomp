@@ -1,0 +1,46 @@
+{
+  "alias": [
+    {"func": "__ZN6Name_Z5GetIDEPKhmm", "alias":  "0006C6D0"}
+  ],
+  "ignore": [
+    "__Z7ToLowerh",
+	"__ZN12TiXmlVisitorD1Ev",
+	"__ZN12TiXmlVisitorD0Ev",
+	"__ZN12TiXmlVisitor10VisitEnterERK13TiXmlDocument",
+	"__ZN12TiXmlVisitor9VisitExitERK13TiXmlDocument",
+	"__ZN12TiXmlVisitor10VisitEnterERK12TiXmlElementPK14TiXmlAttribute",
+	"__ZN12TiXmlVisitor9VisitExitERK12TiXmlElement",
+	"__ZN12TiXmlVisitor5VisitERK16TiXmlDeclaration",
+	"__ZN12TiXmlVisitor5VisitERK9TiXmlText",
+	"__ZN12TiXmlVisitor5VisitERK12TiXmlComment",
+	"__ZN12TiXmlVisitor5VisitERK12TiXmlUnknown",
+	"__ZN12TiXmlPrinterD0Ev",
+	"__ZN12TiXmlPrinterD1Ev"
+  ],
+  "dontcompare": [
+    {"func": "__ZN9Console_Z10AddCommandEPKcPFbvES1_", "pos": [
+      "0000000C",
+      "00000014",
+      "0000001C"
+    ]},
+	{"func": "__ZN9TiXmlBase18ConvertUTF32ToUTF8EmPcPi", "pos":[
+	  "0000009A"
+	]},
+	{"func": "__ZN9TiXmlBase9GetEntityEPKcPcPi13TiXmlEncoding", "pos":[
+	  "0000015E",
+	  "00000194",
+	  "000001C0",
+	  "000001D8"
+	]}
+  ],
+  "canonicalfuncs": [
+    "__ZN11TiXmlString4initEmm@tinystr",
+	"__ZN12TiXmlCommentC1Ev@tinyxml",
+	"__ZN9TiXmlTextC1EPKc@tinyxml",
+	"__ZN12TiXmlUnknownC1Ev@tinyxml",
+	"__ZN16TiXmlDeclarationC1Ev@tinyxml",
+	"__ZN13TiXmlDocumentD1Ev@tinyxml",
+	"__ZN14TiXmlAttributeC1Ev@tinyxml",
+	"__ZN14TiXmlAttributeD1Ev@tinyxml"
+  ]
+}

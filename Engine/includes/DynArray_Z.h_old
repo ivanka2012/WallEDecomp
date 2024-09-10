@@ -1,0 +1,85 @@
+//#include <memory>
+#ifndef DYNARRAY_H
+#define DYNARRAY_H
+#include <Memory_Z.h>
+#include <Types_Z.h>
+
+template<class T>
+struct DynArray_Z{
+    //Uhhggg, bitfields suck
+    S32 m_Capacity : 14;
+    S32 m_Size : 18;
+    T* elems;
+
+    DynArray_Z(){
+        m_Size = 0;
+        m_Capacity = 0;
+        elems = 0;
+    }
+
+    void Realloc(unsigned long newSize){
+        if(newSize){
+            if(elems){
+                elems = (T*)Realloc_Z(elems, newSize * sizeof(T));
+            }else{
+                elems = (T*)Alloc_Z(newSize * sizeof(T));
+            }
+        }else{
+            if(elems){
+                Free_Z(elems);
+                elems = 0;
+            }
+        }
+    }
+
+    T* GetArrayPtr(){
+        return elems;
+    }
+
+    S32 GetSize() const{
+        return m_Size;
+    }
+
+    void SetSize(S32 newSize, unsigned char noAlloc = 0){
+        if(newSize > m_Size){
+            S32 askingFor = newSize - m_Size;
+            if(askingFor > m_Capacity || !noAlloc){
+                Realloc(newSize);
+                m_Capacity = 0;
+            }else{
+                S32 whatsLeft = m_Capacity - askingFor;
+                m_Capacity = whatsLeft; //perhaps m_Capacity -= askingFor;
+            }
+            U32 startIdx = m_Size;
+            for(int i = 0; i < newSize; i++){
+                new (&elems[startIdx + i]) T;
+            }
+            m_Size = newSize;
+        }else if(newSize < m_Size){
+            for(int i = m_Size - 1; i >= newSize; i--){
+                elems[i].~T();
+            }
+            if(noAlloc){
+                S32 howMuchLess = m_Size - newSize;
+                m_Capacity = howMuchLess;
+                m_Size = newSize;
+            }else{
+                Realloc(newSize);
+                m_Size = newSize;
+                m_Capacity = 0;
+            }
+        }
+    }
+
+    T& operator[](int idx){
+        return elems[idx];
+    }
+
+    const T& operator[](int idx) const{
+        return elems[idx];
+    }
+};
+
+//template class DynArray_Z<Bullshit>;
+
+#endif

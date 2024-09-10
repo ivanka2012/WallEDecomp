@@ -21,3 +21,7 @@ _main	__text	000115C8	0000004E	0000001C	0000000C	R	.	.	.	.	.	B	T	.
 sub_11616	__text	00011616	00000010	00000004	00000004	R	.	.	.	.	.	B	.	.
 LowLevelInitProgram(void)	__text	00011626	0000042F	0000002C		R	.	.	.	.	.	B	T	.
 */
+
+int main(){
+    
+}

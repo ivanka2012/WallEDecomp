@@ -32,3 +32,40 @@ Hi_MemoryManager_Z::~Hi_MemoryManager_Z()	__text	00062860	00000018	00000004	0000
 Hi_MemoryManager_Z::~Hi_MemoryManager_Z()	__text	00062878	00000018	00000004	00000004	R	.	.	.	.	.	B	T	.
 Hi_MemoryManager_Z::~Hi_MemoryManager_Z()	__text	00062890	00000032	0000001C	00000004	R	.	.	.	.	.	B	T	.
 */
+
+#include <Memory_Z.h>
+#include <MemoryManager_Z.h>
+
+void Z_Free(void* ptr){
+    MemManager.Free(ptr);
+}
+void* Z_Alloc(unsigned long size, const char* comment, const char* filename, long line, unsigned long align){
+    return MemManager.Alloc(size, comment, filename, line, align);
+}
+void* Z_Realloc(void* ptr, unsigned long size, const char* comment, const char* filename, long line){
+    return MemManager.Realloc(ptr, size, comment, filename, line);
+}
+
+void* operator new(unsigned long size, const char* comment, const char* filename, long line){
+    return MemManager.Alloc(size, comment, filename, line, 4);
+}
+
+void* operator new[](unsigned long size, const char* comment, const char* filename, long line){
+    return MemManager.Alloc(size, comment, filename, line, 4);
+}
+
+void operator delete(void* ptr){
+    MemManager.Free(ptr);
+}
+
+void operator delete(void* ptr, const char* comment, const char* filename, long line){
+    MemManager.Free(ptr);
+}
+
+void operator delete[](void* ptr){
+    MemManager.Free(ptr);
+}
+
+void operator delete[](void* ptr, const char* comment, const char* filename, long line){
+    MemManager.Free(ptr);
+}

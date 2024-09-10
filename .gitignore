@@ -1,1 +1,4 @@
 .vscode/
+objects/
+copytimes.csv
+profile_compare.bin

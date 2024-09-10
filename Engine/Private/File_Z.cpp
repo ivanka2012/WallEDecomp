@@ -28,3 +28,36 @@ File_Z::ReadFloat(float *)	__text	000A39F4	00000059	0000012C	00000008	R	.	.	.	.	
 File_Z::ReadString(char *)	__text	000A3A50	00000074	0000009C	00000008	R	.	.	.	.	.	B	T	.
 File_Z::ReadStringUnderQuote(char *)	__text	000A3AC4	000000D5	000000AC	00000008	R	.	.	.	.	.	B	T	.
 */
+
+#include <File_Z.h>
+
+File_Z::File_Z(){
+
+}
+
+File_Z::~File_Z(){}
+void File_Z::BuildDir(const char*){}
+void File_Z::Close(){}
+void File_Z::DoFileExists(const char*){}
+void File_Z::Flush(){}
+U32 File_Z::GetCurPos(){}
+void File_Z::GetFileDate(const char*){}
+void File_Z::GetRealFileName(const char*, char*){}
+void File_Z::GetSize(){}
+void File_Z::GotoNextString(){}
+Bool File_Z::IsEOF(){}
+void File_Z::Open(const char*, U32, U32, const char*){}
+Bool File_Z::Read(void*, U32){}
+void File_Z::ReadChar(){}
+void File_Z::ReadFloat(float*){}
+void File_Z::ReadInt(S32*){}
+void File_Z::ReadInt(U32*){}
+void File_Z::ReadLine(char*){}
+void File_Z::ReadShort(U16*){}
+void File_Z::ReadString(char*){}
+void File_Z::ReadStringNumber(char*){}
+void File_Z::ReadStringUnderQuote(char*){}
+void File_Z::SeekTo(U32, U32){}
+void File_Z::SetCurPos(U32){}
+void File_Z::SetFileDate(const char*, S32){}
+void File_Z::Write(const void*, U32){}

@@ -23,3 +23,20 @@ MemoryManager_Z::ShowMostNbMalloc(void)	__text	0000E0EE	00000005	00000004	000000
 MemoryManager_Z::VerifyMem(void)	__text	0000E0F4	0000000A	00000004	00000004	R	.	.	.	.	.	B	T	.
 sub_E0FE	__text	0000E0FE	00000010	00000004	00000004	R	.	.	.	.	.	B	.	.
 */
+
+#include <MemoryManager_Z.h>
+#include <stdlib.h>
+
+MemoryManager_Z MemManager;
+
+void* MemoryManager_Z::Alloc(unsigned long size, const char* comment, const char* filename, long line, unsigned long align){
+    return malloc(size);
+}
+
+void* MemoryManager_Z::Realloc(void* ptr, unsigned long size, const char* comment, const char* filename, long line){
+    return realloc(ptr, size);
+}
+
+void MemoryManager_Z::Free(void* ptr){
+    free(ptr);
+}
