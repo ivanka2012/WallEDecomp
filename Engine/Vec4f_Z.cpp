@@ -1,3 +1,7 @@
+/*
+Vec4f::ANormalize(void)	__text	0022C018	000001E0	0000003C	00000004	R	.	.	.	.	.	B	T	.
+*/
+
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 

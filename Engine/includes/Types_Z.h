@@ -97,11 +97,11 @@ typedef unsigned char				Bool;
 // For Threadsafe code.
 
 #if defined(_FAKE)
-	#include "intrin.h"
-	#define READWRITEBARRIER_Z() _ReadWriteBarrier()
+	// #include "intrin.h"
+	// #define READWRITEBARRIER_Z() _ReadWriteBarrier()
 #else
-	#include "intrin.h"
-	#define READWRITEBARRIER_Z() MemoryBarrier(); _ReadWriteBarrier()
+	// #include "intrin.h"
+	// #define READWRITEBARRIER_Z() MemoryBarrier(); _ReadWriteBarrier()
 #endif
 
 #if defined(__SNC__) || defined(__GCC__) || defined(__clang__)
@@ -452,15 +452,16 @@ const Float A_PI		= 3.14159265358979323846f;
 
 #if !defined(_countof)
 	/* _countof helper */
+	// hopefully we don't need this
 	#if !defined(__cplusplus)
-		#define _countof(_Array) (sizeof(_Array) / sizeof(_Array[0]))
+		//#define _countof(_Array) (sizeof(_Array) / sizeof(_Array[0]))
 	#else
-	extern "C++"
+	/*extern "C++"
 	{
 		template <typename _CountofType, size_t _SizeOfArray>
 		char (*__countof_helper(_CountofType (&_Array)[_SizeOfArray]))[_SizeOfArray];
 		#define _countof(_Array) (sizeof(*__countof_helper(_Array)) + 0)
-	}
+	}*/
 	#endif
 #endif
 

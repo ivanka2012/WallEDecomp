@@ -5,6 +5,8 @@
 #ifndef _MATH_Z_H
 #define _MATH_Z_H
 
+#define Vec3f Float3
+
 #include <Assert_Z.h>
 #include <DynArray_Z.h>
 #include <math.h>

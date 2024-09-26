@@ -48,7 +48,6 @@ SegmentVsCylindre(Segment_Z const&,Cylindre_Z const&,CollisionReport_Z &)	__text
 
 #include <Types_Z.h>
 #include <Math_Z.h>
-#include <Vec3f_Z.h>
 #include    <math.h>
 #ifndef M_PI
 #define M_PI          3.14159265358979323846

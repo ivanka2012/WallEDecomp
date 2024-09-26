@@ -680,10 +680,13 @@ ENGINE_CXXSRC = \
 	Wall_E/Dialog_ChangeChapter.cpp \
 	Wall_E/Dialog_MapHelper.cpp \
 	Wall_E/Dialog_MissionsHelper.cpp \
+	Engine/Mat3x3_Z.cpp \
 	Engine/Mat4x4_Z.cpp \
 	Engine/Quat_Z.cpp \
 	Engine/UserDefineCmd_Z.cpp \
-	Engine/Vector_Z.cpp \
+	Engine/Vec2f_Z.cpp \
+	Engine/Vec3f_Z.cpp \
+	Engine/Vec4f_Z.cpp \
 	Wall_E/CheckerCell.cpp \
 	Wall_E/Dialog_AdjustScreen.cpp \
 	Wall_E/Dialog_AllArtifacts.cpp \
