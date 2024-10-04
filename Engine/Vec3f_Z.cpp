@@ -5,7 +5,7 @@ Float3::Get2OrthoVector(Float3&,Float3&)	__text	0022BF5A	000000BE	0000002C	00000
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#include <Math_Z.h>
+#include <Math_Z.h> 
 
 // Accurate normalize:
 //	len1 = length1(v)

@@ -682,6 +682,7 @@ ENGINE_CXXSRC = \
 	Wall_E/Dialog_MissionsHelper.cpp \
 	Engine/Mat3x3_Z.cpp \
 	Engine/Mat4x4_Z.cpp \
+	Engine/Math_Z.cpp \
 	Engine/Quat_Z.cpp \
 	Engine/UserDefineCmd_Z.cpp \
 	Engine/Vec2f_Z.cpp \
@@ -774,16 +775,16 @@ ENGINE_ASMOBJS = $(patsubst %.c,%.s,$(patsubst %.cpp,%.s,$(ENGINE_CXXSRC)))
 all: objects
 
 LibMAC/HID_Util/%.o: LibMAC/HID_Util/%.c $(HEADERS)
-	$(CXX) -c $< -o $@ $(CXXFLAGS) 2> /dev/null # shut the fuck up
+	$(CXX) -c $< -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS) 2> /dev/null # shut the fuck up
 	
 %.o: %.cpp $(HEADERS)
-	$(CXX) -c $< -o $@ $(CXXFLAGS)
+	$(CXX) -c $< -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS)
 
 LibMAC/HID_Util/%.s: LibMAC/HID_Util/%.c $(HEADERS)
-	$(CXX) -c $< -S -o $@ $(CXXFLAGS) 2> /dev/null # shut the fuck up
+	$(CXX) -c $< -S -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS) 2> /dev/null # shut the fuck up
 
 %.s: %.cpp $(HEADERS)
-	$(CXX) -c $< -S -o $@ $(CXXFLAGS)
+	$(CXX) -c $< -S -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS)
 
 
 ZOUNA: $(ENGINE_CXXOBJS) $(ENGINE_ASMOBJS)

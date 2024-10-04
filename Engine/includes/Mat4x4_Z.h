@@ -13,7 +13,7 @@ inline void Inverse4x3(const Mat4x4& In,Mat4x4& Out);	// Inversion for a matrix 
 inline void Inverse4x4(const Mat4x4& In,Mat4x4& Out);	// Inversion for any 4x4 matrix
 inline void Inverse(const Mat4x4& In,Mat4x4& Out);		// Inversion for a matrix with a 3x3 rotation without scale and a translation
 
-struct  Mat4x4
+POSTALIGNED128_Z struct  Mat4x4
 {
 	union
 	{
@@ -88,5 +88,7 @@ struct  Mat4x4
 
 const EXTERN_Z Mat4x4 MAT4X4_ZERO;
 const EXTERN_Z Mat4x4 MAT4X4_IDENTITY;
+
+#include <Mat4x4_Z.inl>
 
 #endif //_MATH_MATRIX4x4_Z_H

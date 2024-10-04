@@ -25,6 +25,8 @@ FINLINE_Z	U32	UFTOL(float a)
 	b = (int)lrintf(a);
 #endif
 	return b;
+#else
+	return 0;
 #endif
 }
 

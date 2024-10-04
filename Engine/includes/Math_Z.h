@@ -104,6 +104,8 @@ inline U16 FloatToU16Range( Float val, const Float min, const Float max )
 	return static_cast<U16>(val);
 }
 
+/*
+In WALL-E these are probably aliases for regular old atof and atoi. We'll comment these out as I want to get this to build.
 FINLINE_Z Bool Atof(const Char* _str, Float& _res)
 {
 	if (*_str)
@@ -137,7 +139,7 @@ FINLINE_Z Bool Atoi(const Char* _str, S32& _res)
 		}
 	}
 	return FALSE;
-}
+}*/
 
 inline	Float Sqrt(Float a);
 inline	Float SSqrt(Float a) { if (a<0.f) return -Sqrt(-a); else return Sqrt(a); }

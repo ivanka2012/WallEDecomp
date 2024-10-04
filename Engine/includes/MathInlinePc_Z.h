@@ -1,8 +1,6 @@
 // Copyright (C) Microsoft. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#include <DirectXMath.h> //oh you have got to be kidding...
-
 #ifdef _M_IX86
 	// Not compatible with X64 or ARM :(
 	#define _USE_SQRT_DIRECT_CALL	1		// pb du _exit_math => 5x à 6x plus rapide comme ça.
@@ -47,10 +45,11 @@ FINLINE_Z	Float Sin(Float x)
 
 FINLINE_Z	void  SinCos(Vec2f& r,Float x)	
 {
-	return DirectX::XMScalarSinCos( &r.x, &r.y, x );
+	r.x = sinf(x);
+	r.y = cosf(x);
 }
 
-FINLINE_Z	Float Tan(Float a)				{return Sin(a)/Cos(a);}
+FINLINE_Z	Float Tan(Float a)				{return tanf(a);}
 
 FINLINE_Z	Float ACos(Float value)
 {
@@ -58,7 +57,7 @@ FINLINE_Z	Float ACos(Float value)
 	EXCEPTIONC_Z(value<=1.f,"ACos(%f)", value);
 	EXCEPTIONC_Z(value>=-1.f,"ACos(%f)", value);
 #endif
-	return DirectX::XMScalarACos( value );
+	return acosf( value );
 }
 
 FINLINE_Z	Float ASin(Float value)
@@ -67,7 +66,7 @@ FINLINE_Z	Float ASin(Float value)
 	EXCEPTIONC_Z(value<=1.f,"ASin(%f)",value);
 	EXCEPTIONC_Z(value>=-1.f,"ASin(%f)",value);
 #endif
-	return DirectX::XMScalarASin( value );
+	return asinf( value );
 }
 
 FINLINE_Z	Float ATan(Float x)				{return atanf(x);}

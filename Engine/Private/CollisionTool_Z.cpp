@@ -314,15 +314,20 @@ int	inttor(
 	return (*nhits != 0);
 }
 
+struct Sphere_Z{
+	Vec3f Center;
+	float Radius;
+};
+
 struct CollisionReport_Z{
 	Vec4f m_vInter; //+0x00
 	Vec4f m_vNormal; //+0x10
 	int unk1; //+0x20
-	int unk1; //+0x24
+	int unk2; //+0x24
 	float m_fDist; //+0x28
 };
 
-Bool SphereVSSphere(const Sphere_Z &Sph1,const Sphere_Z &Sph2,CollisionReport_Z &Result)
+Bool SphereVsSphere(const Sphere_Z &Sph1,const Sphere_Z &Sph2,CollisionReport_Z &Result)
 {
 
 	Vec3f Diff = Sph1.Center - Sph2.Center;
@@ -335,8 +340,8 @@ Bool SphereVSSphere(const Sphere_Z &Sph1,const Sphere_Z &Sph2,CollisionReport_Z 
 		if(Dist<Result.m_fDist)
 		{
 			Result.m_fDist			=Dist;
-			Result.m_vNormal		= Vec4f(Diff/Norm, 1.f);
-			Result.m_vInter		= Vec4f(Sph2.Center + Result.m_vNormal * Sph2.Radius, 1.f);
+			Result.m_vNormal		= Diff/Norm;
+			Result.m_vInter		= Sph2.Center + Sph2.Radius * Result.m_vNormal;
 			return	TRUE;
 		}
 	}

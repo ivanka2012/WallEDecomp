@@ -59,7 +59,11 @@ inline Vec4f& Vec4f::operator = ( const Float _f )
 
 inline Vec4f& Vec4f::operator = ( const Vec3f& _v )
 {
-	vec128 = VecFloatLoad4( _v.x, _v.y, _v.z, 1.f );
+	//vec128 = VecFloatLoad4( _v.x, _v.y, _v.z, 1.f );
+	x = _v.x;
+	y = _v.y;
+	z = _v.z;
+	w = 1.f;
 	return *this;
 }
 
