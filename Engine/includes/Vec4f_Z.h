@@ -40,7 +40,8 @@ POSTALIGNED128_Z struct  Vec4f
 #else
 	Vec4f()	{}
 #endif
-	Vec4f( const Vec4f& _v ) : vec128( _v.vec128 )  { }
+    // This is DEFINITELY not defined as shown in SphereVsSphere
+	// Vec4f( const Vec4f& _v ) : vec128( _v.vec128 )  { }
 	Vec4f( const VecFloat4& _v ) : vec128( _v )  { }
 	Vec4f( const Vec3f& _v, Float _w = 1.0f );
 	explicit Vec4f( const Float _xyzw );

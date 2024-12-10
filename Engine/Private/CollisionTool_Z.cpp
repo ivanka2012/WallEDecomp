@@ -46,6 +46,11 @@ MovingSphereVsCylindre(Capsule_Z const&,Cylindre_Z const&,CollisionReport_Z &)	_
 SegmentVsCylindre(Segment_Z const&,Cylindre_Z const&,CollisionReport_Z &)	__text	0009F568	00000826	000000EC	0000000C	R	.	.	.	.	.	B	.	.
 */
 
+/**
+ * I bet all of these were stolen from the web or from books and none of these functions are Asobo programmers' own work.
+ */
+
+#include <CollisionTool_Z.h>
 #include <Types_Z.h>
 #include <Math_Z.h>
 #include    <math.h>
@@ -320,16 +325,22 @@ struct Sphere_Z{
 };
 
 struct CollisionReport_Z{
-	Vec4f m_vInter; //+0x00
+	Vec4f m_vIntersection; //+0x00
 	Vec4f m_vNormal; //+0x10
 	int unk1; //+0x20
 	int unk2; //+0x24
-	float m_fDist; //+0x28
+	float m_fCollisionDistance; //+0x28
 };
 
+
+// Confirmed to match on 2024-12-08T19:51:20Z
 Bool SphereVsSphere(const Sphere_Z &Sph1,const Sphere_Z &Sph2,CollisionReport_Z &Result)
 {
-
+	/**
+	 * This function took me a good few fucking hours to decompile
+	 *  Do you know the difference between an implicit copy constructor and an explicitly declared one? Well, the implicit copy constructor for Vec4f in GCC 4.0 results in an extra copy right after the scalar multiplication as marked below.
+	 *  Also Asobo is absolutely handling the happy path in the "else" branch, not in the "if" in the nested if-else. 
+	 */
 	Vec3f Diff = Sph1.Center - Sph2.Center;
 	Float RadSum = Sph1.Radius + Sph2.Radius , SqrNorm = Diff.GetNorm2();
 	if( SqrNorm < RadSum*RadSum)
@@ -337,13 +348,166 @@ Bool SphereVsSphere(const Sphere_Z &Sph1,const Sphere_Z &Sph2,CollisionReport_Z 
 		Float	Norm=sqrt(SqrNorm);
 		Float	Dist=Norm - Sph2.Radius;
 
-		if(Dist<Result.m_fDist)
+		if(Dist>Result.m_fCollisionDistance)
 		{
-			Result.m_fDist			=Dist;
+			return FALSE;
+		}
+		else
+		{
+			Result.m_fCollisionDistance			=Dist;
 			Result.m_vNormal		= Diff/Norm;
-			Result.m_vInter		= Sph2.Center + Sph2.Radius * Result.m_vNormal;
+			Result.m_vIntersection		= Sph2.Center +  Result.m_vNormal * Sph2.Radius; //Right here after the multiplication!
 			return	TRUE;
 		}
 	}
 	return	FALSE;
 }
+
+struct Capsule_Z {
+	Vec3f Org; //+0x00
+	Float Len; //+0x0C
+	Vec3f Dir; //+0x10
+	Float Radius; //+0x1C
+};
+
+Bool MovingSphereVsQuad(const Capsule_Z &Cap,const Vec4f &p1,const Vec4f &p2,const Vec4f &p3,const Vec4f &p4,
+						CollisionReport_Z &Report)
+{
+	/**
+	 * This function is a strange cookie. Apparently Asobo decided here that the Vec4fs were no good, so they instead casted every Vec4f to a Vec3f and perform operations on those.
+	 * Manual CSE vs Compiler CSE are two *****very***** different things and the programmer who wrote this subroutine clearly knew that. You can clearly see the manual CSE when it tries the edges of the quad themselves.
+	 */
+
+	// Calc plane equation
+	Vec3f normal;
+	normal.x = p1.y*(p2.z-p3.z)+p2.y*(p3.z-p1.z)+p3.y*(p1.z-p2.z);
+	normal.y = p1.z*(p2.x-p3.x)+p2.z*(p3.x-p1.x)+p3.z*(p1.x-p2.x);
+	normal.z = p1.x*(p2.y-p3.y)+p2.x*(p3.y-p1.y)+p3.x*(p1.y-p2.y);
+	Float	Norm = normal.GetNorm();
+	if(Norm<=Float_Eps)
+		return	FALSE;
+	normal/=Norm;
+	// Test If Exit Collision
+	Float	Ex = Cap.Dir * normal;
+	if(Ex >= 0.f)
+		return	FALSE;
+	// Test si la face est arriere
+	Float d = -(normal*p1.xyz());
+	Float Dp = normal*Cap.Org+d;
+	if(Dp<=0.f)
+		return	FALSE;
+	if(Dp<=Cap.Radius)
+	{
+		Vec3f edge1 = p1.xyz()-Cap.Org;
+		Vec3f edge2 = p2.xyz()-Cap.Org;
+		if((((edge1)^(edge2))*normal)<-Float_Eps_Col)	return FALSE;
+		Vec3f edge3 = p3.xyz()-Cap.Org;
+		if((((edge2)^(edge3))*normal)<-Float_Eps_Col)	return FALSE;
+		Vec3f edge4 = p4.xyz()-Cap.Org;
+		if((((edge3)^(edge4))*normal)<-Float_Eps_Col)	return FALSE;
+		if((((edge4)^(edge1))*normal)<-Float_Eps_Col)	return FALSE;
+
+		Report.m_fCollisionDistance = 0.f;
+		Report.m_vIntersection = Cap.Org;
+		Report.m_vNormal = normal;
+		return TRUE;
+	}
+	// Intersection avec le plan
+	Float dist = -(Float)((Dp-Cap.Radius)/(normal*Cap.Dir));
+	if( dist > Report.m_fCollisionDistance || dist < 0.f || dist > Cap.Len)
+		return FALSE;
+	Vec3f intersection = Cap.Dir*dist+Cap.Org;
+
+	// Check si l'intersection est dans le triangle
+	
+	Vec3f edge1 = p1.xyz()-intersection;
+	Vec3f edge2 = p2.xyz()-intersection;
+	if((((edge1)^(edge2))*normal)<-Float_Eps_Col)	return FALSE;
+	Vec3f edge3 = p3.xyz()-intersection;
+	if((((edge2)^(edge3))*normal)<-Float_Eps_Col)	return FALSE;
+	Vec3f edge4 = p4.xyz()-intersection;
+	if((((edge3)^(edge4))*normal)<-Float_Eps_Col)	return FALSE;
+	if((((edge4)^(edge1))*normal)<-Float_Eps_Col)	return FALSE;
+
+	Report.m_fCollisionDistance = dist;
+	Report.m_vIntersection = intersection;
+	Report.m_vNormal = normal;
+	return TRUE;
+}
+
+//This looks vaguely similar to the cldTestEdge found in OpenDynamicsEngine but there are some important changes in this version, notably the introduction of epsilons.
+
+Float fBestDepth;
+Vec4f vBestNormal;
+int iBestAxis;
+
+static Bool _cldTestEdge( Float fp0, Float fp1, Float fR, 
+                          const Float* vNormal, int iAxis ) 
+{
+  Float fMin, fMax;
+
+  // calculate min and max interval values  
+  if ( fp0 < fp1 ) {
+    fMin = fp0;
+    fMax = fp1;
+  } else {
+    fMin = fp1;
+    fMax = fp0;    
+  }
+
+  // check if we overlapp
+  Float fDepthMin = fR - fMin;
+  Float fDepthMax = fMax + fR;
+
+  // ASOBO: Take the multiplication and see if that's close enough to zero. Saved some branches!
+  if ( (fDepthMin * fDepthMax) < 1e-10f) {
+    // do nothing
+    return FALSE;
+  }
+
+  // calculate normal's length
+  // This pointer cast is dirty as hell, but it's what Asobo does here (or something close to it).
+  Float fLength = Vec4_GetNorm(*(Vec4f*)(vNormal));
+
+  // if long enough
+  if ( fLength > 1e-5f ) {
+
+    // normalize depth
+    Float fOneOverLength = 1.0f/fLength;
+	if(fDepthMin > fDepthMax){
+		fDepthMax*=fOneOverLength;
+		
+
+		// if lower depth than best found so far (favor face over edges)
+		if (fDepthMax*1.5f<fBestDepth) {
+			fOneOverLength = -fOneOverLength;
+			// remember current axis as best axis
+			vBestNormal[0]  = vNormal[0]*fOneOverLength;
+			vBestNormal[1]  = vNormal[1]*fOneOverLength;
+			vBestNormal[2]  = vNormal[2]*fOneOverLength;
+			vBestNormal[3]  = vNormal[3]*fOneOverLength;
+			iBestAxis    = iAxis;
+			//dAASSERT(fDepth>=0);
+			fBestDepth   = fDepthMax;
+		}
+	}else{
+		fDepthMin*=fOneOverLength;
+		
+
+		// if lower depth than best found so far (favor face over edges)
+		if (fDepthMin*1.5f<fBestDepth) {
+			// remember current axis as best axis
+			vBestNormal[0]  = vNormal[0]*fOneOverLength;
+			vBestNormal[1]  = vNormal[1]*fOneOverLength;
+			vBestNormal[2]  = vNormal[2]*fOneOverLength;
+			vBestNormal[3]  = vNormal[3]*fOneOverLength;
+			iBestAxis    = iAxis;
+			//dAASSERT(fDepth>=0);
+			fBestDepth   = fDepthMin;
+		}
+	}
+  }
+
+  return TRUE;
+}
+

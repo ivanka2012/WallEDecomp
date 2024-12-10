@@ -62,11 +62,12 @@ inline Vec3f& Vec3f::operator *= ( const Float _f )
 	return *this;
 }
 
+// Confirmed to match on 2024-12-08T19:51:34Z
 inline Vec3f Vec3f::operator / ( const Float _f ) const
 {
-	ASSERT_Z( _f != 0.f );
-	const Float invF( 1.0f / _f );
-	return Vec3f ( x*invF, y*invF, z*invF );
+	//ASSERT_Z( _f != 0.f );
+	//const Float invF( 1.0f / _f );
+	return Vec3f ( x / _f, y / _f, z / _f );
 }
 
 inline Vec3f& Vec3f::operator /= ( const Float _f )
@@ -142,7 +143,7 @@ inline Float Vec3f::GetNorm2() const
 
 inline Float Vec3f::GetNorm() const
 {
-	return Sqrt ( GetNorm2() );
+	return sqrt(x*x+y*y+z*z);
 }
 
 inline void Vec3f::SetNorm(Float _norm)

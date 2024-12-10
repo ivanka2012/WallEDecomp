@@ -126,9 +126,16 @@ inline Vec4f Vec4f::operator - () const
 	return VecFloatNegate( vec128 );
 }
 
+// Confirmed to match on 2024-12-08T19:51:06Z
+// Maybe no inline
 inline Vec4f Vec4f::operator * ( const Float _f ) const
 {
-	return VecFloatScale( vec128, _f );
+	Vec4f ret;
+	ret.x = x * _f;
+	ret.y = y * _f;
+	ret.z = z * _f;
+	ret.w = w *_f;
+	return ret;
 }
 
 inline Vec4f& Vec4f::operator *= ( const Float _f )
