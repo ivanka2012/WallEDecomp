@@ -53,324 +53,332 @@ SegmentVsCylindre(Segment_Z const&,Cylindre_Z const&,CollisionReport_Z &)	__text
 #include <CollisionTool_Z.h>
 #include <Types_Z.h>
 #include <Math_Z.h>
-#include    <math.h>
+#include <math.h>
 #ifndef M_PI
-#define M_PI          3.14159265358979323846
+#define M_PI 3.14159265358979323846
 #endif
 
 /* epsilon surrounding for near zero values */
 
-#define     EQN_EPS     1e-9
-#define	    IsZero(x)	((x) > -EQN_EPS && (x) < EQN_EPS)
+#define EQN_EPS 1e-9
+#define IsZero(x) ((x) > -EQN_EPS && (x) < EQN_EPS)
 
-#define     cbrt(x)     ((x) > 0.0 ? pow((float)(x), 1.0f/3.0f) : \
-                          ((x) < 0.0 ? -pow((float)-(x), 1.0f/3.0f) : 0.0))
+#define cbrt(x) ((x) > 0.0 ? pow((float)(x), 1.0f / 3.0f) : ((x) < 0.0 ? -pow((float)-(x), 1.0f / 3.0f) : 0.0))
 
 int SolveQuadric(double *c, double *s)
 {
-    double p, q, D;
+	double p, q, D;
 
-    /* normal form: x^2 + px + q = 0 */
+	/* normal form: x^2 + px + q = 0 */
 
-    p = c[ 1 ] / (2 * c[ 2 ]);
-    q = c[ 0 ] / c[ 2 ];
+	p = c[1] / (2 * c[2]);
+	q = c[0] / c[2];
 
-    D = p * p - q;
+	D = p * p - q;
 
-    if (IsZero(D))
-    {
-	s[ 0 ] = - p;
-	return 1;
-    }
-    else if (D < 0)
-    {
-	return 0;
-    }
-    else /* if (D > 0) */
-    {
-	double sqrt_D = sqrt(D);
+	if (IsZero(D))
+	{
+		s[0] = -p;
+		return 1;
+	}
+	else if (D < 0)
+	{
+		return 0;
+	}
+	else /* if (D > 0) */
+	{
+		double sqrt_D = sqrt(D);
 
-	s[ 0 ] =   sqrt_D - p;
-	s[ 1 ] = - sqrt_D - p;
-	return 2;
-    }
+		s[0] = sqrt_D - p;
+		s[1] = -sqrt_D - p;
+		return 2;
+	}
 }
-
 
 int SolveCubic(double *c, double *s)
 {
-    int     i, num;
-    double  sub;
-    double  A, B, C;
-    double  sq_A, p, q;
-    double  cb_p, D;
+	int i, num;
+	double sub;
+	double A, B, C;
+	double sq_A, p, q;
+	double cb_p, D;
 
-    /* normal form: x^3 + Ax^2 + Bx + C = 0 */
+	/* normal form: x^3 + Ax^2 + Bx + C = 0 */
 
-    A = c[ 2 ] / c[ 3 ];
-    B = c[ 1 ] / c[ 3 ];
-    C = c[ 0 ] / c[ 3 ];
+	A = c[2] / c[3];
+	B = c[1] / c[3];
+	C = c[0] / c[3];
 
-    /*  substitute x = y - A/3 to eliminate quadric term:
+	/*  substitute x = y - A/3 to eliminate quadric term:
 	x^3 +px + q = 0 */
 
-    sq_A = A * A;
-    p = 1.0/3 * (- 1.0/3 * sq_A + B);
-    q = 1.0/2 * (2.0/27 * A * sq_A - 1.0/3 * A * B + C);
+	sq_A = A * A;
+	p = 1.0 / 3 * (-1.0 / 3 * sq_A + B);
+	q = 1.0 / 2 * (2.0 / 27 * A * sq_A - 1.0 / 3 * A * B + C);
 
-    /* use Cardano's formula */
+	/* use Cardano's formula */
 
-    cb_p = p * p * p;
-    D = q * q + cb_p;
+	cb_p = p * p * p;
+	D = q * q + cb_p;
 
-    if (IsZero(D))
-    {
-	if (IsZero(q)) /* one triple solution */
+	if (IsZero(D))
 	{
-	    s[ 0 ] = 0;
-	    num = 1;
+		if (IsZero(q)) /* one triple solution */
+		{
+			s[0] = 0;
+			num = 1;
+		}
+		else /* one single and one double solution */
+		{
+			double u = cbrt(-q);
+			s[0] = 2 * u;
+			s[1] = -u;
+			num = 2;
+		}
 	}
-	else /* one single and one double solution */
+	else if (D < 0) /* Casus irreducibilis: three real solutions */
 	{
-	    double u = cbrt(-q);
-	    s[ 0 ] = 2 * u;
-	    s[ 1 ] = - u;
-	    num = 2;
+		double phi = 1.0 / 3 * acos(-q / sqrt(-cb_p));
+		double t = 2 * sqrt(-p);
+
+		s[0] = t * cosf(phi);
+		s[1] = -t * cosf(phi + M_PI / 3);
+		s[2] = -t * cosf(phi - M_PI / 3);
+		num = 3;
 	}
-    }
-    else if (D < 0) /* Casus irreducibilis: three real solutions */
-    {
-	double phi = 1.0/3 * acos(-q / sqrt(-cb_p));
-	double t = 2 * sqrt(-p);
+	else /* one real solution */
+	{
+		double sqrt_D = sqrt(D);
+		double u = cbrt(sqrt_D - q);
+		double v = -cbrt(sqrt_D + q);
 
-	s[ 0 ] =   t * cosf(phi);
-	s[ 1 ] = - t * cosf(phi + M_PI / 3);
-	s[ 2 ] = - t * cosf(phi - M_PI / 3);
-	num = 3;
-    }
-    else /* one real solution */
-    {
-	double sqrt_D = sqrt(D);
-	double u = cbrt(sqrt_D - q);
-	double v = - cbrt(sqrt_D + q);
+		s[0] = u + v;
+		num = 1;
+	}
 
-	s[ 0 ] = u + v;
-	num = 1;
-    }
+	/* resubstitute */
 
-    /* resubstitute */
+	sub = 1.0 / 3 * A;
 
-    sub = 1.0/3 * A;
+	for (i = 0; i < num; ++i)
+		s[i] -= sub;
 
-    for (i = 0; i < num; ++i)
-	s[ i ] -= sub;
-
-    return num;
+	return num;
 }
-
 
 int SolveQuartic(double *c, double *s)
 {
-    double  coeffs[ 4 ];
-    double  z, u, v, sub;
-    double  A, B, C, D;
-    double  sq_A, p, q, r;
-    int     i, num;
+	double coeffs[4];
+	double z, u, v, sub;
+	double A, B, C, D;
+	double sq_A, p, q, r;
+	int i, num;
 
-    /* normal form: x^4 + Ax^3 + Bx^2 + Cx + D = 0 */
+	/* normal form: x^4 + Ax^3 + Bx^2 + Cx + D = 0 */
 
-    A = c[ 3 ] / c[ 4 ];
-    B = c[ 2 ] / c[ 4 ];
-    C = c[ 1 ] / c[ 4 ];
-    D = c[ 0 ] / c[ 4 ];
+	A = c[3] / c[4];
+	B = c[2] / c[4];
+	C = c[1] / c[4];
+	D = c[0] / c[4];
 
-    /*  substitute x = y - A/4 to eliminate cubic term:
+	/*  substitute x = y - A/4 to eliminate cubic term:
 	x^4 + px^2 + qx + r = 0 */
 
-    sq_A = A * A;
-    p = - 3.0/8 * sq_A + B;
-    q = 1.0/8 * sq_A * A - 1.0/2 * A * B + C;
-    r = - 3.0/256*sq_A*sq_A + 1.0/16*sq_A*B - 1.0/4*A*C + D;
+	sq_A = A * A;
+	p = -3.0 / 8 * sq_A + B;
+	q = 1.0 / 8 * sq_A * A - 1.0 / 2 * A * B + C;
+	r = -3.0 / 256 * sq_A * sq_A + 1.0 / 16 * sq_A * B - 1.0 / 4 * A * C + D;
 
-    if (IsZero(r))
-    {
-	/* no absolute term: y(y^3 + py + q) = 0 */
+	if (IsZero(r))
+	{
+		/* no absolute term: y(y^3 + py + q) = 0 */
 
-	coeffs[ 0 ] = q;
-	coeffs[ 1 ] = p;
-	coeffs[ 2 ] = 0;
-	coeffs[ 3 ] = 1;
+		coeffs[0] = q;
+		coeffs[1] = p;
+		coeffs[2] = 0;
+		coeffs[3] = 1;
 
-	num = SolveCubic(coeffs, s);
+		num = SolveCubic(coeffs, s);
 
-	s[ num++ ] = 0;
-    }
-    else
-    {
-	/* solve the resolvent cubic ... */
-
-	coeffs[ 0 ] = 1.0/2 * r * p - 1.0/8 * q * q;
-	coeffs[ 1 ] = - r;
-	coeffs[ 2 ] = - 1.0/2 * p;
-	coeffs[ 3 ] = 1;
-
-	(void) SolveCubic(coeffs, s);
-
-	/* ... and take the one real solution ... */
-
-	z = s[ 0 ];
-
-	/* ... to build two quadric equations */
-
-	u = z * z - r;
-	v = 2 * z - p;
-
-	if (IsZero(u))
-	    u = 0;
-	else if (u > 0)
-	    u = sqrt(u);
+		s[num++] = 0;
+	}
 	else
-	    return 0;
+	{
+		/* solve the resolvent cubic ... */
 
-	if (IsZero(v))
-	    v = 0;
-	else if (v > 0)
-	    v = sqrt(v);
-	else
-	    return 0;
+		coeffs[0] = 1.0 / 2 * r * p - 1.0 / 8 * q * q;
+		coeffs[1] = -r;
+		coeffs[2] = -1.0 / 2 * p;
+		coeffs[3] = 1;
 
-	coeffs[ 0 ] = z - u;
-	coeffs[ 1 ] = q < 0 ? -v : v;
-	coeffs[ 2 ] = 1;
+		(void)SolveCubic(coeffs, s);
 
-	num = SolveQuadric(coeffs, s);
+		/* ... and take the one real solution ... */
 
-	coeffs[ 0 ]= z + u;
-	coeffs[ 1 ] = q < 0 ? v : -v;
-	coeffs[ 2 ] = 1;
+		z = s[0];
 
-	num += SolveQuadric(coeffs, s + num);
-    }
+		/* ... to build two quadric equations */
 
-    /* resubstitute */
+		u = z * z - r;
+		v = 2 * z - p;
 
-    sub = 1.0/4 * A;
+		if (IsZero(u))
+			u = 0;
+		else if (u > 0)
+			u = sqrt(u);
+		else
+			return 0;
 
-    for (i = 0; i < num; ++i)
-	s[ i ] -= sub;
+		if (IsZero(v))
+			v = 0;
+		else if (v > 0)
+			v = sqrt(v);
+		else
+			return 0;
 
-    return num;
+		coeffs[0] = z - u;
+		coeffs[1] = q < 0 ? -v : v;
+		coeffs[2] = 1;
+
+		num = SolveQuadric(coeffs, s);
+
+		coeffs[0] = z + u;
+		coeffs[1] = q < 0 ? v : -v;
+		coeffs[2] = 1;
+
+		num += SolveQuadric(coeffs, s + num);
+	}
+
+	/* resubstitute */
+
+	sub = 1.0 / 4 * A;
+
+	for (i = 0; i < num; ++i)
+		s[i] -= sub;
+
+	return num;
 }
 
-int	inttor(
-			Float3	raybase,		// Base of the intersection ray
-			Float3	raycos,			// Direction cosines of the ray
-			Float	radius,			// Major radius of the torus
-			Float	rplane,			// Minor planer radius
-			Float	rnorm,			// Minor normal radius
-			int *	nhits,			// Number of intersections
-			double	rhits[4]		// Intersection distances
-		 )
+int inttor(
+	Float3 raybase, // Base of the intersection ray
+	Float3 raycos,	// Direction cosines of the ray
+	Float radius,	// Major radius of the torus
+	Float rplane,	// Minor planer radius
+	Float rnorm,	// Minor normal radius
+	int *nhits,		// Number of intersections
+	double rhits[4] // Intersection distances
+)
 {
-	Float3	Base, Dcos;		/* Transformed intersection ray	*/
-	Float	rho, a0, b0;		/* Related constants		*/
-	Float	f, l, t, g, q, m, u;	/* Ray dependent terms		*/
-	double	C[5];			/* Quartic coefficients		*/
+	Float3 Base, Dcos;		   /* Transformed intersection ray	*/
+	Float rho, a0, b0;		   /* Related constants		*/
+	Float f, l, t, g, q, m, u; /* Ray dependent terms		*/
+	double C[5];			   /* Quartic coefficients		*/
 
-	*nhits  = 0;
+	*nhits = 0;
 
-/*	Transform the intersection ray					*/
+	/*	Transform the intersection ray					*/
 
 	Base = raybase;
 	Dcos = raycos;
 
-/*	Compute constants related to the torus.				*/
+	/*	Compute constants related to the torus.				*/
 
-	rho = rplane*rplane / (rnorm*rnorm);
-	a0  = 4.f * radius*radius;
-	b0  = radius*radius - rplane*rplane;
+	rho = rplane * rplane / (rnorm * rnorm);
+	a0 = 4.f * radius * radius;
+	b0 = radius * radius - rplane * rplane;
 
-/*	Compute ray dependent terms.					*/
+	/*	Compute ray dependent terms.					*/
 
-	f = 1.f - Dcos.y*Dcos.y;
-	l = 2.f * (Base.x*Dcos.x + Base.z*Dcos.z);
-	t = Base.x*Base.x + Base.z*Base.z;
-	g = f + rho * Dcos.y*Dcos.y;
-	q = a0 / (g*g);
-	m = (l + 2.f*rho*Dcos.y*Base.y) / g;
-	u = (t +    rho*Base.y*Base.y + b0) / g;
+	f = 1.f - Dcos.y * Dcos.y;
+	l = 2.f * (Base.x * Dcos.x + Base.z * Dcos.z);
+	t = Base.x * Base.x + Base.z * Base.z;
+	g = f + rho * Dcos.y * Dcos.y;
+	q = a0 / (g * g);
+	m = (l + 2.f * rho * Dcos.y * Base.y) / g;
+	u = (t + rho * Base.y * Base.y + b0) / g;
 
-/*	Compute the coefficients of the quartic.			*/
+	/*	Compute the coefficients of the quartic.			*/
 
 	C[4] = 1.f;
 	C[3] = 2.f * m;
-	C[2] = m*m + 2.f*u - q*f;
-	C[1] = 2.f*m*u - q*l;
-	C[0] = u*u - q*t;
-	
-/*	Use quartic root solver found in "Graphics Gems" by Jochen	*/
-/*	Schwarze.							*/
-	*nhits = SolveQuartic (C,rhits);
+	C[2] = m * m + 2.f * u - q * f;
+	C[1] = 2.f * m * u - q * l;
+	C[0] = u * u - q * t;
 
-/*	SolveQuartic returns root pairs in reversed order.		*/
-	m = Float(rhits[0]); u = Float(rhits[1]); rhits[0] = u; rhits[1] = m;
-	m = Float(rhits[2]); u = Float(rhits[3]); rhits[2] = u; rhits[3] = m;
+	/*	Use quartic root solver found in "Graphics Gems" by Jochen	*/
+	/*	Schwarze.							*/
+	*nhits = SolveQuartic(C, rhits);
+
+	/*	SolveQuartic returns root pairs in reversed order.		*/
+	m = Float(rhits[0]);
+	u = Float(rhits[1]);
+	rhits[0] = u;
+	rhits[1] = m;
+	m = Float(rhits[2]);
+	u = Float(rhits[3]);
+	rhits[2] = u;
+	rhits[3] = m;
 
 	return (*nhits != 0);
 }
 
-struct Sphere_Z{
+struct Sphere_Z
+{
 	Vec3f Center;
 	float Radius;
 };
 
-struct CollisionReport_Z{
-	Vec4f m_vIntersection; //+0x00
-	Vec4f m_vNormal; //+0x10
-	int unk1; //+0x20
-	int unk2; //+0x24
+struct CollisionReport_Z
+{
+	Vec4f m_vIntersection;		//+0x00
+	Vec4f m_vNormal;			//+0x10
+	int unk1;					//+0x20
+	int unk2;					//+0x24
 	float m_fCollisionDistance; //+0x28
 };
 
-
 // Confirmed to match on 2024-12-08T19:51:20Z
-Bool SphereVsSphere(const Sphere_Z &Sph1,const Sphere_Z &Sph2,CollisionReport_Z &Result)
+Bool SphereVsSphere(const Sphere_Z &Sph1, const Sphere_Z &Sph2, CollisionReport_Z &Result)
 {
 	/**
 	 * This function took me a good few fucking hours to decompile
 	 *  Do you know the difference between an implicit copy constructor and an explicitly declared one? Well, the implicit copy constructor for Vec4f in GCC 4.0 results in an extra copy right after the scalar multiplication as marked below.
-	 *  Also Asobo is absolutely handling the happy path in the "else" branch, not in the "if" in the nested if-else. 
+	 *  Also Asobo is absolutely handling the happy path in the "else" branch, not in the "if" in the nested if-else.
 	 */
 	Vec3f Diff = Sph1.Center - Sph2.Center;
-	Float RadSum = Sph1.Radius + Sph2.Radius , SqrNorm = Diff.GetNorm2();
-	if( SqrNorm < RadSum*RadSum)
+	Float RadSum = Sph1.Radius + Sph2.Radius, SqrNorm = Diff.GetNorm2();
+	if (SqrNorm < RadSum * RadSum)
 	{
-		Float	Norm=sqrt(SqrNorm);
-		Float	Dist=Norm - Sph2.Radius;
+		Float Norm = sqrt(SqrNorm);
+		Float Dist = Norm - Sph2.Radius;
 
-		if(Dist>Result.m_fCollisionDistance)
+		if (Dist > Result.m_fCollisionDistance)
 		{
 			return FALSE;
 		}
 		else
 		{
-			Result.m_fCollisionDistance			=Dist;
-			Result.m_vNormal		= Diff/Norm;
-			Result.m_vIntersection		= Sph2.Center +  Result.m_vNormal * Sph2.Radius; //Right here after the multiplication!
-			return	TRUE;
+			Result.m_fCollisionDistance = Dist;
+			Result.m_vNormal = Diff / Norm;
+			Result.m_vIntersection = Sph2.Center + Result.m_vNormal * Sph2.Radius; // Right here after the multiplication!
+			return TRUE;
 		}
 	}
-	return	FALSE;
+	return FALSE;
 }
 
-struct Capsule_Z {
-	Vec3f Org; //+0x00
-	Float Len; //+0x0C
-	Vec3f Dir; //+0x10
+struct Capsule_Z
+{
+	Vec3f Org;	  //+0x00
+	Float Len;	  //+0x0C
+	Vec3f Dir;	  //+0x10
 	Float Radius; //+0x1C
 };
 
-Bool MovingSphereVsQuad(const Capsule_Z &Cap,const Vec4f &p1,const Vec4f &p2,const Vec4f &p3,const Vec4f &p4,
+/**
+ * TODO: look over this function and see why the variables are in a different order;
+ */
+Bool MovingSphereVsQuad(const Capsule_Z &Cap, const Vec4f &p1, const Vec4f &p2, const Vec4f &p3, const Vec4f &p4,
 						CollisionReport_Z &Report)
 {
 	/**
@@ -380,32 +388,36 @@ Bool MovingSphereVsQuad(const Capsule_Z &Cap,const Vec4f &p1,const Vec4f &p2,con
 
 	// Calc plane equation
 	Vec3f normal;
-	normal.x = p1.y*(p2.z-p3.z)+p2.y*(p3.z-p1.z)+p3.y*(p1.z-p2.z);
-	normal.y = p1.z*(p2.x-p3.x)+p2.z*(p3.x-p1.x)+p3.z*(p1.x-p2.x);
-	normal.z = p1.x*(p2.y-p3.y)+p2.x*(p3.y-p1.y)+p3.x*(p1.y-p2.y);
-	Float	Norm = normal.GetNorm();
-	if(Norm<=Float_Eps)
-		return	FALSE;
-	normal/=Norm;
+	normal.x = p1.y * (p2.z - p3.z) + p2.y * (p3.z - p1.z) + p3.y * (p1.z - p2.z);
+	normal.y = p1.z * (p2.x - p3.x) + p2.z * (p3.x - p1.x) + p3.z * (p1.x - p2.x);
+	normal.z = p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y);
+	Float Norm = normal.GetNorm();
+	if (Norm <= Float_Eps)
+		return FALSE;
+	normal /= Norm;
 	// Test If Exit Collision
-	Float	Ex = Cap.Dir * normal;
-	if(Ex >= 0.f)
-		return	FALSE;
+	Float Ex = Cap.Dir * normal;
+	if (Ex >= 0.f)
+		return FALSE;
 	// Test si la face est arriere
-	Float d = -(normal*p1.xyz());
-	Float Dp = normal*Cap.Org+d;
-	if(Dp<=0.f)
-		return	FALSE;
-	if(Dp<=Cap.Radius)
+	Float d = -(normal * p1.xyz());
+	Float Dp = normal * Cap.Org + d;
+	if (Dp <= 0.f)
+		return FALSE;
+	if (Dp <= Cap.Radius)
 	{
-		Vec3f edge1 = p1.xyz()-Cap.Org;
-		Vec3f edge2 = p2.xyz()-Cap.Org;
-		if((((edge1)^(edge2))*normal)<-Float_Eps_Col)	return FALSE;
-		Vec3f edge3 = p3.xyz()-Cap.Org;
-		if((((edge2)^(edge3))*normal)<-Float_Eps_Col)	return FALSE;
-		Vec3f edge4 = p4.xyz()-Cap.Org;
-		if((((edge3)^(edge4))*normal)<-Float_Eps_Col)	return FALSE;
-		if((((edge4)^(edge1))*normal)<-Float_Eps_Col)	return FALSE;
+		Vec3f edge1 = p1.xyz() - Cap.Org;
+		Vec3f edge2 = p2.xyz() - Cap.Org;
+		if ((((edge1) ^ (edge2)) * normal) < -Float_Eps_Col)
+			return FALSE;
+		Vec3f edge3 = p3.xyz() - Cap.Org;
+		if ((((edge2) ^ (edge3)) * normal) < -Float_Eps_Col)
+			return FALSE;
+		Vec3f edge4 = p4.xyz() - Cap.Org;
+		if ((((edge3) ^ (edge4)) * normal) < -Float_Eps_Col)
+			return FALSE;
+		if ((((edge4) ^ (edge1)) * normal) < -Float_Eps_Col)
+			return FALSE;
 
 		Report.m_fCollisionDistance = 0.f;
 		Report.m_vIntersection = Cap.Org;
@@ -413,21 +425,25 @@ Bool MovingSphereVsQuad(const Capsule_Z &Cap,const Vec4f &p1,const Vec4f &p2,con
 		return TRUE;
 	}
 	// Intersection avec le plan
-	Float dist = -(Float)((Dp-Cap.Radius)/(normal*Cap.Dir));
-	if( dist > Report.m_fCollisionDistance || dist < 0.f || dist > Cap.Len)
+	Float dist = -(Float)((Dp - Cap.Radius) / (normal * Cap.Dir));
+	if (dist > Report.m_fCollisionDistance || dist < 0.f || dist > Cap.Len)
 		return FALSE;
-	Vec3f intersection = Cap.Dir*dist+Cap.Org;
+	Vec3f intersection = Cap.Dir * dist + Cap.Org;
 
 	// Check si l'intersection est dans le triangle
-	
-	Vec3f edge1 = p1.xyz()-intersection;
-	Vec3f edge2 = p2.xyz()-intersection;
-	if((((edge1)^(edge2))*normal)<-Float_Eps_Col)	return FALSE;
-	Vec3f edge3 = p3.xyz()-intersection;
-	if((((edge2)^(edge3))*normal)<-Float_Eps_Col)	return FALSE;
-	Vec3f edge4 = p4.xyz()-intersection;
-	if((((edge3)^(edge4))*normal)<-Float_Eps_Col)	return FALSE;
-	if((((edge4)^(edge1))*normal)<-Float_Eps_Col)	return FALSE;
+
+	Vec3f edge1 = p1.xyz() - intersection;
+	Vec3f edge2 = p2.xyz() - intersection;
+	if ((((edge1) ^ (edge2)) * normal) < -Float_Eps_Col)
+		return FALSE;
+	Vec3f edge3 = p3.xyz() - intersection;
+	if ((((edge2) ^ (edge3)) * normal) < -Float_Eps_Col)
+		return FALSE;
+	Vec3f edge4 = p4.xyz() - intersection;
+	if ((((edge3) ^ (edge4)) * normal) < -Float_Eps_Col)
+		return FALSE;
+	if ((((edge4) ^ (edge1)) * normal) < -Float_Eps_Col)
+		return FALSE;
 
 	Report.m_fCollisionDistance = dist;
 	Report.m_vIntersection = intersection;
@@ -435,79 +451,277 @@ Bool MovingSphereVsQuad(const Capsule_Z &Cap,const Vec4f &p1,const Vec4f &p2,con
 	return TRUE;
 }
 
-//This looks vaguely similar to the cldTestEdge found in OpenDynamicsEngine but there are some important changes in this version, notably the introduction of epsilons.
+// This looks vaguely similar to the cldTestEdge found in OpenDynamicsEngine but there are some important changes in this version, notably the introduction of epsilons.
 
 Float fBestDepth;
 Vec4f vBestNormal;
 int iBestAxis;
 
-static Bool _cldTestEdge( Float fp0, Float fp1, Float fR, 
-                          const Float* vNormal, int iAxis ) 
+static Bool _cldTestEdge(Float fp0, Float fp1, Float fR,
+						 const Float *vNormal, int iAxis)
 {
-  Float fMin, fMax;
+	Float fMin, fMax;
 
-  // calculate min and max interval values  
-  if ( fp0 < fp1 ) {
-    fMin = fp0;
-    fMax = fp1;
-  } else {
-    fMin = fp1;
-    fMax = fp0;    
-  }
+	// calculate min and max interval values
+	if (fp0 < fp1)
+	{
+		fMin = fp0;
+		fMax = fp1;
+	}
+	else
+	{
+		fMin = fp1;
+		fMax = fp0;
+	}
 
-  // check if we overlapp
-  Float fDepthMin = fR - fMin;
-  Float fDepthMax = fMax + fR;
+	// check if we overlapp
+	Float fDepthMin = fR - fMin;
+	Float fDepthMax = fMax + fR;
 
-  // ASOBO: Take the multiplication and see if that's close enough to zero. Saved some branches!
-  if ( (fDepthMin * fDepthMax) < 1e-10f) {
-    // do nothing
-    return FALSE;
-  }
+	// ASOBO: Take the multiplication and see if that's close enough to zero. Saved some branches!
+	if ((fDepthMin * fDepthMax) < 1e-10f)
+	{
+		// do nothing
+		return FALSE;
+	}
 
-  // calculate normal's length
-  // This pointer cast is dirty as hell, but it's what Asobo does here (or something close to it).
-  Float fLength = Vec4_GetNorm(*(Vec4f*)(vNormal));
+	// calculate normal's length
+	// This pointer cast is dirty as hell, but it's what Asobo does here (or something close to it).
+	Float fLength = Vec4_GetNorm(*(Vec4f *)(vNormal));
 
-  // if long enough
-  if ( fLength > 1e-5f ) {
+	// if long enough
+	if (fLength > 1e-5f)
+	{
 
-    // normalize depth
-    Float fOneOverLength = 1.0f/fLength;
-	if(fDepthMin > fDepthMax){
-		fDepthMax*=fOneOverLength;
-		
+		// normalize depth
+		Float fOneOverLength = 1.0f / fLength;
+		if (fDepthMin > fDepthMax)
+		{
+			fDepthMax *= fOneOverLength;
 
-		// if lower depth than best found so far (favor face over edges)
-		if (fDepthMax*1.5f<fBestDepth) {
-			fOneOverLength = -fOneOverLength;
-			// remember current axis as best axis
-			vBestNormal[0]  = vNormal[0]*fOneOverLength;
-			vBestNormal[1]  = vNormal[1]*fOneOverLength;
-			vBestNormal[2]  = vNormal[2]*fOneOverLength;
-			vBestNormal[3]  = vNormal[3]*fOneOverLength;
-			iBestAxis    = iAxis;
-			//dAASSERT(fDepth>=0);
-			fBestDepth   = fDepthMax;
+			// if lower depth than best found so far (favor face over edges)
+			if (fDepthMax * 1.5f < fBestDepth)
+			{
+				fOneOverLength = -fOneOverLength;
+				// remember current axis as best axis
+				vBestNormal[0] = vNormal[0] * fOneOverLength;
+				vBestNormal[1] = vNormal[1] * fOneOverLength;
+				vBestNormal[2] = vNormal[2] * fOneOverLength;
+				vBestNormal[3] = vNormal[3] * fOneOverLength;
+				iBestAxis = iAxis;
+				// dAASSERT(fDepth>=0);
+				fBestDepth = fDepthMax;
+			}
 		}
-	}else{
-		fDepthMin*=fOneOverLength;
-		
+		else
+		{
+			fDepthMin *= fOneOverLength;
 
-		// if lower depth than best found so far (favor face over edges)
-		if (fDepthMin*1.5f<fBestDepth) {
-			// remember current axis as best axis
-			vBestNormal[0]  = vNormal[0]*fOneOverLength;
-			vBestNormal[1]  = vNormal[1]*fOneOverLength;
-			vBestNormal[2]  = vNormal[2]*fOneOverLength;
-			vBestNormal[3]  = vNormal[3]*fOneOverLength;
-			iBestAxis    = iAxis;
-			//dAASSERT(fDepth>=0);
-			fBestDepth   = fDepthMin;
+			// if lower depth than best found so far (favor face over edges)
+			if (fDepthMin * 1.5f < fBestDepth)
+			{
+				// remember current axis as best axis
+				vBestNormal[0] = vNormal[0] * fOneOverLength;
+				vBestNormal[1] = vNormal[1] * fOneOverLength;
+				vBestNormal[2] = vNormal[2] * fOneOverLength;
+				vBestNormal[3] = vNormal[3] * fOneOverLength;
+				iBestAxis = iAxis;
+				// dAASSERT(fDepth>=0);
+				fBestDepth = fDepthMin;
+			}
 		}
 	}
-  }
 
-  return TRUE;
+	return TRUE;
+}
+
+const float &MinRef(const float &a, const float &b)
+{
+	if (a > b)
+	{
+		return b;
+	}
+	else
+	{
+		return a;
+	}
+}
+
+const float &MaxRef(const float &a, const float &b)
+{
+	if (a < b)
+	{
+		return b;
+	}
+	else
+	{
+		return a;
+	}
+}
+
+/**
+ * TODO: figure out the register spill and the mixed arguments in minimum selection
+ */
+static Bool _cldTestFace(Float fp0, Float fp1, Float fp2, Float fR,
+						 const Float *vNormal, int iAxis)
+{
+	Float fMin, fMax;
+
+	// Find a minimum and maximum
+	// Note that MaxRef and MinRef take and return references.
+	fMin = MinRef(fp2, MinRef(fp0, fp1));
+	fMax = MaxRef(fp2, MaxRef(fp0, fp1));
+
+	// check if we overlapp
+	Float fDepthMin = fR - fMin;
+	Float fDepthMax = fMax + fR;
+
+	// ASOBO: Take the multiplication and see if that's close enough to zero. Saved some branches!
+	if ((fDepthMin * fDepthMax) < 1e-10f)
+	{
+		// do nothing
+		return FALSE;
+	}
+
+	// calculate normal's length
+	// This pointer cast is dirty as hell, but it's what Asobo does here (or something close to it).
+	// Float fLength = Vec4_GetNorm(*(Vec4f *)(vNormal));
+
+	if (fDepthMin > fDepthMax)
+	{
+		// if lower depth than best found so far (favor face over edges)
+		if (fDepthMax < fBestDepth)
+		{
+			// remember current axis as best axis
+			// How the fuck does negating these numbers result in a stack allocation for me but not for Asobo???
+			vBestNormal[0] = -vNormal[0];
+			vBestNormal[1] = -vNormal[1];
+			vBestNormal[2] = -vNormal[2];
+			vBestNormal[3] = -vNormal[3];
+			iBestAxis = iAxis;
+			// dAASSERT(fDepth>=0);
+			fBestDepth = fDepthMax;
+		}
+	}
+	else
+	{
+		// if lower depth than best found so far (favor face over edges)
+		if (fDepthMin < fBestDepth)
+		{
+			// remember current axis as best axis
+			vBestNormal[0] = vNormal[0];
+			vBestNormal[1] = vNormal[1];
+			vBestNormal[2] = vNormal[2];
+			vBestNormal[3] = vNormal[3];
+			iBestAxis = iAxis;
+			// dAASSERT(fDepth>=0);
+			fBestDepth = fDepthMin;
+		}
+	}
+
+	return TRUE;
+}
+
+/**
+ * TODO: Another piece of shit bites the dust... This one also has the negation register spill...
+ */
+void dLineClosestApproach(const Float *pa, const Float *ua,
+						  const Float *pb, const Float *ub,
+						  Float *alpha, Float *beta)
+{
+	Float p[3];
+	p[0] = pb[0] - pa[0];
+	p[1] = pb[1] - pa[1];
+	p[2] = pb[2] - pa[2];
+	Float uaub = ua[0] * ub[0] + ua[1] * ub[1] + ua[2] * ub[2];
+	Float q1 = ua[0] * p[0] + ua[1] * p[1] + ua[2] * p[2];
+	Float q2 = -(ub[0] * p[0] + ub[1] * p[1] + ub[2] * p[2]);
+	Float d = 1 - uaub * uaub;
+	if (d <= 0.0001f)
+	{
+
+		*alpha = 0;
+		*beta = 0;
+	}
+	else
+	{
+		d = 1.f / d;
+		*alpha = (q1 + uaub * q2) * d;
+		*beta = (uaub * q1 + q2) * d;
+	}
+}
+
+/**
+ * Oh thank god 
+ * Nothing to see here! Moving on...
+ */
+void cullPoints(int n, Float p[], int m, int i0, int iret[])
+{
+
+	int i, j;
+	Float a, cx, cy, q;
+	if (n == 1)
+	{
+		cx = p[0];
+		cy = p[1];
+	}
+	else if (n == 2)
+	{
+		cx = Float(0.5) * (p[0] + p[2]);
+		cy = Float(0.5) * (p[1] + p[3]);
+	}
+	else
+	{
+		a = 0;
+		cx = 0;
+		cy = 0;
+		for (i = 0; i < (n - 1); i++)
+		{
+			q = p[i * 2] * p[i * 2 + 3] - p[i * 2 + 2] * p[i * 2 + 1];
+			a += q;
+			cx += q * (p[i * 2] + p[i * 2 + 2]);
+			cy += q * (p[i * 2 + 1] + p[i * 2 + 3]);
+		}
+		q = p[n * 2 - 2] * p[1] - p[0] * p[n * 2 - 1];
+		a = 1.f / (Float(3.0) * (a + q));
+		cx = a * (cx + q * (p[n * 2 - 2] + p[0]));
+		cy = a * (cy + q * (p[n * 2 - 1] + p[1]));
+	}
+
+	Float A[8];
+	for (i = 0; i < n; i++)
+		A[i] = Atan2(p[i * 2 + 1] - cy, p[i * 2] - cx);
+
+	int avail[8];
+	for (i = 0; i < n; i++)
+		avail[i] = 1;
+	avail[i0] = 0;
+	iret[0] = i0;
+	iret++;
+	for (j = 1; j < m; j++)
+	{
+		a = Float(j) * (2 * M_PI / m) + A[i0];
+		if (a > M_PI)
+			a -= Float(2 * M_PI);
+		Float maxdiff = 1e9, diff;
+
+		for (i = 0; i < n; i++)
+		{
+			if (avail[i])
+			{
+				diff = Abs(A[i] - a);
+				if (diff > M_PI)
+					diff = 2 * M_PI - diff;
+				if (diff < maxdiff)
+				{
+					maxdiff = diff;
+					*iret = i;
+				}
+			}
+		}
+
+		avail[*iret] = 0;
+		iret++;
+	}
 }
 
