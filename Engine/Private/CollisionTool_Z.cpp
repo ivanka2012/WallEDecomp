@@ -378,6 +378,18 @@ struct Capsule_Z
 
 /**
  * TODO: look over this function and see why the variables are in a different order;
+ * 
+ * A few things excluded:
+ * - A common "return" tail function. That simply does not get inlined even with "inline" if it is only called in this function, and even with always_inline there are differences
+ * - Negation. That doesn't count in this function. Or does it?
+ * - Structure layout. That is fixed here.
+ * - Constructors. Nope! No change at all.
+ * - Constructing CollisionReport_Z and then copying it to "report". Just more code.
+ *  
+ * It's always something so damn obvious...
+ * 
+ * Update 2025-01-25T18:22:52Z: Well, it's not THAT obvious. Make sure to take out p1.xyz(), that Vec3f has a copy constructor AND the Vec3f subtract operator to not take a reference but a regular Vec3f. I am not convinced that this is what Asobo did but it is semantically identical to their solution. Now let's see how this broke the other functions...
+ * 
  */
 Bool MovingSphereVsQuad(const Capsule_Z &Cap, const Vec4f &p1, const Vec4f &p2, const Vec4f &p3, const Vec4f &p4,
 						CollisionReport_Z &Report)
@@ -401,13 +413,14 @@ Bool MovingSphereVsQuad(const Capsule_Z &Cap, const Vec4f &p1, const Vec4f &p2, 
 	if (Ex >= 0.f)
 		return FALSE;
 	// Test si la face est arriere
-	Float d = -(normal * p1.xyz());
+	Float3 p1xyz = p1.xyz();
+	Float d = -(normal * p1xyz);
 	Float Dp = normal * Cap.Org + d;
 	if (Dp <= 0.f)
 		return FALSE;
 	if (Dp <= Cap.Radius)
 	{
-		Vec3f edge1 = p1.xyz() - Cap.Org;
+		Vec3f edge1 = p1xyz - Cap.Org;
 		Vec3f edge2 = p2.xyz() - Cap.Org;
 		if ((((edge1) ^ (edge2)) * normal) < -Float_Eps_Col)
 			return FALSE;
@@ -433,7 +446,7 @@ Bool MovingSphereVsQuad(const Capsule_Z &Cap, const Vec4f &p1, const Vec4f &p2, 
 
 	// Check si l'intersection est dans le triangle
 
-	Vec3f edge1 = p1.xyz() - intersection;
+	Vec3f edge1 = p1xyz - intersection;
 	Vec3f edge2 = p2.xyz() - intersection;
 	if ((((edge1) ^ (edge2)) * normal) < -Float_Eps_Col)
 		return FALSE;

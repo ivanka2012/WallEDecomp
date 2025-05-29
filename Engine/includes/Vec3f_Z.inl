@@ -34,7 +34,7 @@ inline Vec3f& Vec3f::operator += ( const Vec3f& _v )
 
 inline Vec3f Vec3f::operator + () const	{ return *this; }
 
-inline Vec3f Vec3f::operator - ( const Vec3f& _v ) const
+inline Vec3f Vec3f::operator - ( const Vec3f _v ) const
 {
 	return Vec3f ( x - _v.x, y - _v.y, z - _v.z );
 }

@@ -37,6 +37,7 @@ struct  Vec3f
 	explicit Vec3f( const Float _xyz );
 	Vec3f( const Float _x, const Float _y, const Float _z );
 	Vec3f( const VecFloat4&_v );
+	Vec3f( const Vec3f& v ) {x = v.x; y = v.y; z = v.z;}
 	////////////////////// � virer
 	explicit Vec3f( const Quat &Q );
 	explicit Vec3f( const Color &C );
@@ -61,7 +62,8 @@ struct  Vec3f
 	Vec3f	operator +  ( const Vec3f &_v ) const;
 	Vec3f& operator += ( const Vec3f &_v );
 	Vec3f	operator +  () const;
-	Vec3f	operator -  ( const Vec3f &_v ) const;
+	/* IMPORTANT: This thing takes a regular value, not a reference! */
+	Vec3f	operator -  ( const Vec3f _v ) const;
 	Vec3f& operator -= ( const Vec3f &_v );
 	Vec3f	operator -  () const;
 	Vec3f	operator *  ( const Float _f ) const;
