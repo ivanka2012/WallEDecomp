@@ -44,3 +44,6 @@ MemoryBank_Z::GetFindAlloc(long,char *,void *,void *)	__text	0020187C	0000013F	0
 MemoryBank_Z::FindAlloc(void *,void *)	__text	002019BC	00000064	0000023C	0000000C	R	.	.	.	.	.	B	T	.
 MemoryBank_Z::ShowUnMarkedMem(void)	__text	00201A20	00000120	0000022C	00000004	R	.	.	.	.	.	B	T	.
 */
+
+// This class is not fun... it has nothing to do with Mac WALL-E but it's crucial for console ports...
+// Thanks to vtables this didn't get stripped out by the linker

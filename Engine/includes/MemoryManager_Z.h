@@ -1,9 +1,6 @@
 #pragma once
 #include <Types_Z.h>
-
-class Hi_MemoryManager_Z{
-
-};
+#include <Memory_Z.h>
 
 /**
  * I think that the following functions/classes were declared in LibMAC 
