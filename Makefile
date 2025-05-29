@@ -279,7 +279,7 @@ ENGINE_CXXSRC = \
 	Engine/UnPack_Z.cpp \
 	Engine/UserDefine_Z.cpp \
 	Engine/VehiculeMove_Z.cpp \
-	Engine/VolatileMgr_Z.cpp \
+	Engine/VolatileMem_Z.cpp \
 	Engine/VolumeAgent_Z.cpp \
 	Engine/Warp_Z.cpp \
 	Engine/WaterHeightMap_Z.cpp \
