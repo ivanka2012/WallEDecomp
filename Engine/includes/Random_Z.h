@@ -22,3 +22,6 @@ float ran1(long *idum);
  */
 
 void InitRandom(long seed);
+
+long Alea(long i_Min, long i_Max);
+float Random();
