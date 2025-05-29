@@ -769,25 +769,29 @@ ENGINE_CXXSRC = \
 	Wall_E/Dialog_ControlsBonusDescent.cpp
 HEADERS = $(wildcard *.h *.hpp Engine/includes/*.h Engine/includes/*.hpp LibMAC/HID_Util/*.h LibMAC/HID_Util/*.hpp LibMAC/tinyxml/*.h LibMAC/tinyxml/*.hpp LibMAC/includes/*.h LibMAC/includes/*.hpp)
 ENGINE_CXXOBJS = $(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(ENGINE_CXXSRC)))
+ENGINE_DEPENDS := $(patsubst %.c,%.d,$(patsubst %.cpp,%.d,$(ENGINE_CXXSRC)))
 ENGINE_ASMOBJS = $(patsubst %.c,%.s,$(patsubst %.cpp,%.s,$(ENGINE_CXXSRC)))
 
 .PHONY: all
 all: objects
 
-LibMAC/HID_Util/%.o: LibMAC/HID_Util/%.c $(HEADERS)
-	$(CXX) -c $< -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS) 2> /dev/null # shut the fuck up
+-include $(ENGINE_DEPENDS)
+
+LibMAC/HID_Util/%.s: LibMAC/HID_Util/%.c
+	$(CXX) -MMD -MP -c $< -S -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS) 2> /dev/null # shut the fuck up, I know it's bad
+
+%.s: %.cpp
+	$(CXX) -MMD -MP -c $< -S -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS)
+
+
+LibMAC/HID_Util/%.o: LibMAC/HID_Util/%.s LibMAC/HID_Util/%.c
+	$(CXX) -c $< -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS) 2> /dev/null # shut the fuck up, I know it's bad
 	
-%.o: %.cpp $(HEADERS)
+%.o: %.s %.cpp
 	$(CXX) -c $< -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS)
 
-LibMAC/HID_Util/%.s: LibMAC/HID_Util/%.c $(HEADERS)
-	$(CXX) -c $< -S -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS) 2> /dev/null # shut the fuck up
 
-%.s: %.cpp $(HEADERS)
-	$(CXX) -c $< -S -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS)
-
-
-ZOUNA: $(ENGINE_CXXOBJS) $(ENGINE_ASMOBJS)
+ZOUNA: $(ENGINE_CXXOBJS)
 	g++ $(ENGINE_CXXOBJS) -framework Carbon -framework IOKit -o ZOUNA.executable
 	strip -o ZOUNA.stripped.executable -x ZOUNA.executable
 
