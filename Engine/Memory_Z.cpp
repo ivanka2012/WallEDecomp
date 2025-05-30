@@ -36,7 +36,7 @@ Hi_MemoryManager_Z::~Hi_MemoryManager_Z()	__text	00062890	00000032	0000001C	0000
 #include <Memory_Z.h>
 #include <MemoryManager_Z.h>
 #include <Assert_Z.h>
-#include <Main_Z.h>
+#include <Program_Z.h>
 
 void Hi_MemoryManager_Z::Init() {
     /*m_FreeMemCached = (U32)m_HeapEnd - (U32)m_HeapBase;
@@ -75,6 +75,7 @@ void* Hi_MemoryManager_Z::Alloc(U32 i_Size, const Char* i_Comment, const Char* i
     // m_NbAlloc++;
     // m_FrameNbAlloc++;
     // return l_Mem;
+    return NULL;
 }
 
 void* Hi_MemoryManager_Z::AllocEnd(U32 i_Size, const Char* i_Comment, const Char* i_File, S32 i_Line, U32 i_Align) {
@@ -82,24 +83,29 @@ void* Hi_MemoryManager_Z::AllocEnd(U32 i_Size, const Char* i_Comment, const Char
     // m_NbAlloc++;
     // m_FrameNbAlloc++;
     // return l_Mem;
+    return NULL;
 }
 
 void* Hi_MemoryManager_Z::FindAlloc(void* i_RangeStart, void* i_RangeEnd) {
     //return m_MemoryBank.FindAlloc(i_RangeStart, i_RangeEnd);
+    return NULL;
 }
 
 U32 Hi_MemoryManager_Z::FindAllocNb(void* i_RangeStart, void* i_RangeEnd) {
     //return m_MemoryBank.GetNbFindAlloc(i_RangeStart, i_RangeEnd);
+    return 0;
 }
 
 void* Hi_MemoryManager_Z::FindAllocID(S32 i_AllocID, Char* i_ResultDescription, void* i_RangeStart, void* i_RangeEnd) {
     //return m_MemoryBank.GetFindAlloc(i_AllocID, i_ResultDescription, i_RangeStart, i_RangeEnd);
+    return NULL;
 }
 
 void* Hi_MemoryManager_Z::Realloc(void* i_Ptr, U32 i_Size, const Char* i_Comment, const Char* i_File, S32 i_Line) {
     // void* l_Mem = m_MemoryBank.Realloc(i_Ptr, i_Size, i_Comment);
     // m_FrameNbAlloc++;
     // return l_Mem;
+    return NULL;
 }
 
 void Hi_MemoryManager_Z::Free(void* i_Ptr) {
@@ -160,7 +166,7 @@ void Z_FreeContiguous(void* i_Ptr) {
 void* Z_Alloc(U32 size, const Char* comment, const Char* filename, S32 line, U32 align){
     return MemManager.Alloc(size, comment, filename, line, align);
 }
-void* Z_Alloc(U32 size, const Char* comment, const Char* filename, S32 line, U32 align){
+void* Z_AllocContiguous(U32 size, const Char* comment, const Char* filename, S32 line, U32 align){
     return MemManager.AllocContiguous(size, comment, filename, line, align);
 }
 

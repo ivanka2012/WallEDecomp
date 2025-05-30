@@ -1,9 +1,9 @@
-#ifndef ALLOC_H
-#define ALLOC_H
+#ifndef MEMORY_Z_H
+#define MEMORY_Z_H
 
+#include <Types_Z.h>
 #ifdef __cplusplus
 #include <string.h>
-#include <Types_Z.h>
 
 class Hi_MemoryManager_Z {
 public:
@@ -40,25 +40,31 @@ public:
     virtual void PrintStatus();
     virtual U32 GetHeapSize() {
         // return (U32)m_MemoryBank.GetHeapEnd(); - (U32)m_MemoryBank.GetHeapBase();
+        return 0;
     }
     virtual void* GetHeapBase() {
         // return m_MemoryBank.GetHeapBase();
+        return 0;
     }
     virtual U32 GetNbAlloc() {
         return m_NbAlloc;
     }
     virtual U32 GetAllocatedMem() {
         // return m_MemoryBank.GetAllocatedMem();
+        return 0;
     }
     virtual U32 GetFreeMem() {
         // m_FreeMemCached = m_MemoryBank.GetFreeMem();
         // return m_FreeMemCached;
+        return 0;
     }
     virtual U32 GetFragments() {
         // return m_MemoryBank.GetNbFreeBlocks();
+        return 0;
     }
     virtual U32 GetLargestFree() {
         // return m_MemoryBank.GetLargestFree();
+        return 0;
     }
     virtual U32 GetFrameNbAlloc() {
         return m_FrameNbAlloc;
@@ -74,6 +80,7 @@ public:
     }
     virtual U32 ShowUnMarkedMem() {
         // return m_MemoryBank.ShowUnMarkedMem();
+        return 0;
     }
     virtual void ShowMostNbMalloc() {
         // m_MemoryBank.ShowMostNbMalloc();

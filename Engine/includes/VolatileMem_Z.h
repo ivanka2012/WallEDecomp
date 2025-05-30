@@ -1,3 +1,6 @@
+#ifndef VOLATILEMEM_Z_H
+#define VOLATILEMEM_Z_H
+
 #include "DynArray_Z.h"
 #include "Types_Z.h"
 
@@ -26,3 +29,5 @@ private:
     S32 m_FirstFreeBlock;
     S32 m_FirstAllocatedBlock;
 };
+
+#endif

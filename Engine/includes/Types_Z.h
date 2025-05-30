@@ -584,4 +584,16 @@ const Float A_PI		= 3.14159265358979323846f;
 #define ADD_TEST(TEST, i)	| (((int)((bool)TEST))<<i)
 #define BUILD_FUNC_PTR_INDEX(...)	0 __VA_ARGS__
 
+#undef S32_MIN
+#define S32_MIN -2147483648
+
+#undef FALSE
+#define FALSE (Bool)(0 == 1)
+
+#undef TRUE
+#define TRUE (Bool)(0 == 0)
+
+#undef NULL
+#define NULL 0
+
 #endif //_TYPES_Z_H
