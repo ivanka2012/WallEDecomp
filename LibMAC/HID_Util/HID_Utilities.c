@@ -45,12 +45,12 @@
 #pragma mark - Compiling directives to enable/disable code
 /*****************************************************/
 
-#define USE_HOTPLUGGING 	TRUE	// set TRUE to enable hot plugging!
-#define USE_NOTIFICATIONS 	TRUE	// set TRUE to use notifications instead of device callbacks for hot unplugging!
-#define LOG_DEVICES			FALSE	// for debugging; Logs new devices to stdout
-#define LOG_ELEMENTS		FALSE	// for debugging; Logs new elements to stdout
-#define LOG_SCORING			FALSE	// for debugging; Logs HIDFindDevice & HIDFindActionDeviceAndElement scoring to stdout
-#define LOG_SEARCHING		FALSE	// for debugging; Logs HIDFindSubElement searching info to stdout
+#define USE_HOTPLUGGING 	1 //TRUE	// set TRUE to enable hot plugging!
+#define USE_NOTIFICATIONS 	1// TRUE	// set TRUE to use notifications instead of device callbacks for hot unplugging!
+#define LOG_DEVICES			0 //FALSE	// for debugging; Logs new devices to stdout
+#define LOG_ELEMENTS		0 //FALSE	// for debugging; Logs new elements to stdout
+#define LOG_SCORING			0 //FALSE	// for debugging; Logs HIDFindDevice & HIDFindActionDeviceAndElement scoring to stdout
+#define LOG_SEARCHING		0 //FALSE	// for debugging; Logs HIDFindSubElement searching info to stdout
 
 /*****************************************************/
 #pragma mark - includes & imports
