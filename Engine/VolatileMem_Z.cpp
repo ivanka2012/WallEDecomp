@@ -8,7 +8,7 @@ VolatileMgr_Z::UpdateVolatileBlocks(float)	__text	000E1F5C	0000008F	0000002C	000
 VolatileMgr_Z::VolatileMgr_Z(void)	__text	000E1FEE	00000090	0000001C	00000004	R	.	.	.	.	.	B	T	.
 */
 
-#include <VolatileMgr_Z.h>
+#include <VolatileMem_Z.h>
 
 void VolatileMgr_Z::Minimize() {
     return;
@@ -81,6 +81,27 @@ VolatileMgr_Z::VolatileMgr_Z() {
         l_VolBlock.m_State = -1;
         SetState(l_BlockId,0);
     }
+}
+
+void VolatileMgr_Z::UpdateVolatileBlocks(Float i_DeltaTime) {
+    if (i_DeltaTime > 0.05f) {
+        i_DeltaTime = 0.05f;
+    }
+    S32 l_BlockId;
+    S32 l_CurBlockId;
+    for (l_BlockId = m_FirstAllocatedBlock, l_CurBlockId = l_BlockId; l_CurBlockId >= 0; l_CurBlockId = l_BlockId) {
+        VolatileBlock& l_VolBlock = m_VolatileBlockArray[l_CurBlockId];
+        if (!l_VolBlock.m_Pointer) {
+            //Woah... that's one way of doing a breakpoint!
+            *(volatile U32*)(0x0) = NULL;
+        }
+        l_BlockId = l_VolBlock.m_NextBlockToUpdate;
+        l_VolBlock.m_Timer = l_VolBlock.m_Timer + i_DeltaTime;
+        if (l_VolBlock.m_Timer > l_VolBlock.m_TimeToFree) {
+            FreeVolatileBlock_Z(l_CurBlockId);
+        }
+    }
+    return;
 }
 
 
