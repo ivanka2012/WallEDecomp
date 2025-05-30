@@ -87,7 +87,8 @@ public:
         T* oldValues = Hash;
 
         presentBits = NewC_Z("HashTableBase_Z::BitArray_Z") BitArray_Z(newSize);
-        Hash = (T*) AllocC_Z(sizeof(T) * newSize, "HashTableBase_Z::Hash");
+        /** Part of me thinks that HashTableBase_Z::Hash is actually an embedded struct/class...  */
+        Hash = (T*) AllocC_Z(sizeof(T) * newSize, "HashTableBase_Z::Hash"); 
         presentBits->ClearAllBits();
         memset(Hash, 0, sizeof(T) * newSize);
 
