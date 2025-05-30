@@ -1,4 +1,6 @@
-#pragma once
+#ifndef PROGRAM_Z_H
+#define PROGRAM_Z_H
+
 #include <stdint.h>
 #include <Console_Z.h>
 
@@ -9,3 +11,5 @@ struct Global_Z{
 };
 
 extern Global_Z gData;
+
+#endif
