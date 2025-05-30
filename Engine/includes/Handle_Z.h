@@ -3,6 +3,8 @@
 #include <DynArray_Z.h>
 #include <HashTable_Z.h>
 
+#include <Name_Z.h>
+
 struct BaseObject_Z{
 public:
 
@@ -27,13 +29,6 @@ struct BaseObject_ZHdl {
     }
 };
 
-struct Name_Z{
-    U32 name;
-
-	Name_Z(){}
-    Name_Z(U32 Name) { name = Name; }
-};
-
 class DrawInfo_Z;
 class Vec4f;
 
@@ -43,13 +38,14 @@ struct HandleRec_Z {
         RSC = 1<<3 //Resource?
     };
 
-    unsigned char aa; //Handle id key?
+    U8 Key; //Handle id key?
     U8 Flag; //Dirty flag?
     Bool Marked;
     unsigned char dd;
     BaseObject_Z* ObjPtr;
     U32 Name; //This is **NOT** a Name_Z. Constructor inlining will fail in DynArray_Z<HandleRec_Z>::SetSize otherwise.
-    U32 d; 
+    U16 ClassId;
+    U16 xRamBlock; 
     HandleRec_Z() {
         /*a = 0;
         b = 0;
@@ -57,7 +53,7 @@ struct HandleRec_Z {
         d = 0;*/
         Name = 0;
         ObjPtr = 0;
-        aa = 1;
+        Key = 1;
         Flag = NONE;
     }
     ~HandleRec_Z(){}
@@ -88,12 +84,12 @@ public:
     virtual void Draw(DrawInfo_Z&);
     virtual void Minimize();
     virtual void ClearMark();
-    virtual void Unk1(); //InvalidClassSize(short)?
-    virtual void Unk2(); //Who knows...
+    virtual void InvalidClassSize(S16 const a1);
+    virtual void RemoveResource(const BaseObject_ZHdl& a1);
     virtual void ChangeHandleName(const BaseObject_ZHdl&, const Name_Z&);
     virtual void RequestRegion(const Vec4f&, float);
     virtual void DeleteHandle(const BaseObject_ZHdl&);
-    virtual void Unk3(); //GetNameStrFromId?
+    virtual void GetNameStrFromId(const Name_Z& a1);
 
 
     /**

@@ -18,7 +18,9 @@ public:
     S32 FindLastBit(bool i_State, S32 i_firstBitToCheck) const;
 
     inline void Minimize() {
+        Z_SetBestBit(true);
         bits.Minimize();
+        Z_SetBestBit(false);
     }
 
     inline void Flush() {

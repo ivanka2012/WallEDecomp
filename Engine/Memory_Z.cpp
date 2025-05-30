@@ -155,6 +155,9 @@ void Z_Verify() {
     MemManager.VerifyMem();
 }
 
+void Z_SetBestBit(bool bit){
+    MemManager.SetBestBit(bit);
+}
 
 void Z_Free(void* ptr){
     MemManager.Free(ptr);

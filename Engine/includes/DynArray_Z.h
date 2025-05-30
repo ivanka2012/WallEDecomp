@@ -82,8 +82,10 @@ public:
 	}
 	void	Minimize(void)
 	{
+		Z_SetBestBit(true);
 		Realloc(Size);
 		ReservedSize=0;
+		Z_SetBestBit(false);
 	}
 	void	Realloc()
 	{

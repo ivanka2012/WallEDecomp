@@ -19,7 +19,7 @@ public:
     // MemoryBank_Z m_MemoryBank; //+0x24 36
 
     Hi_MemoryManager_Z();
-    ~Hi_MemoryManager_Z();
+    virtual ~Hi_MemoryManager_Z();
 
     virtual void Init();
     virtual void Shut();
@@ -133,6 +133,8 @@ void operator delete[](void* ptr, const Char* comment, const Char* filename, S32
 U32 MemoryGraphColor();
 void Z_Verify();
 
+void Z_SetBestBit(bool bit);
+
 /**
  * @brief Zouna's free function
  * 
@@ -162,6 +164,7 @@ void* Z_AllocEnd(U32 size, const Char* comment, const Char* filename, S32 line, 
 void* Z_Realloc(void* ptr, U32 size, const Char* comment, const Char* filename, S32 line);
 
 #define Alloc_Z(size) Z_Alloc(size, "Anonymous Alloc", __FILE__, __LINE__, 4)
+#define AllocC_Z(size, comment) Z_Alloc(size, comment, __FILE__, __LINE__, 4)
 #define Realloc_Z(ptr, size) Z_Realloc(ptr, size, "Anonymous Alloc", __FILE__, __LINE__)
 #define Free_Z(ptr) Z_Free(ptr)
 

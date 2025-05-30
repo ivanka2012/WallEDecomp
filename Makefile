@@ -266,6 +266,7 @@ ENGINE_CXXSRC = \
 	Engine/SuperSpray_Z.cpp \
 	Engine/SuperSprayParticles_Z.cpp \
 	Engine/SurfaceCollision_Z.cpp \
+	Engine/Sys_Z.cpp \
 	Engine/SystemDatas_Z.cpp \
 	Engine/Throwable_Z.cpp \
 	Engine/Tokenizer_Z.cpp \
