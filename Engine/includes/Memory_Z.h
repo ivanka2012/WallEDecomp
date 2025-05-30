@@ -2,8 +2,8 @@
 #define MEMORY_Z_H
 
 #include <Types_Z.h>
-#ifdef __cplusplus
 #include <string.h>
+#include <MemoryBank_Z.h>
 
 class Hi_MemoryManager_Z {
 public:
@@ -16,7 +16,7 @@ public:
     U32 m_FrameNbAlloc; //+0x1C
     Float m_AllocTimer; //+0x20 32
     // TODO
-    // MemoryBank_Z m_MemoryBank; //+0x24 36
+    MemoryBank_Z m_MemoryBank; //+0x24 36
 
     Hi_MemoryManager_Z();
     virtual ~Hi_MemoryManager_Z();
@@ -39,32 +39,26 @@ public:
     virtual U32 Update(Float i_DeltaTime);
     virtual void PrintStatus();
     virtual U32 GetHeapSize() {
-        // return (U32)m_MemoryBank.GetHeapEnd(); - (U32)m_MemoryBank.GetHeapBase();
-        return 0;
+        return (U32)m_MemoryBank.GetHeapEnd() - (U32)m_MemoryBank.GetHeapBase();
     }
     virtual void* GetHeapBase() {
-        // return m_MemoryBank.GetHeapBase();
-        return 0;
+        return m_MemoryBank.GetHeapBase();
     }
     virtual U32 GetNbAlloc() {
         return m_NbAlloc;
     }
     virtual U32 GetAllocatedMem() {
-        // return m_MemoryBank.GetAllocatedMem();
-        return 0;
+        return m_MemoryBank.GetAllocatedMem();
     }
     virtual U32 GetFreeMem() {
-        // m_FreeMemCached = m_MemoryBank.GetFreeMem();
-        // return m_FreeMemCached;
-        return 0;
+        m_FreeMemCached = m_MemoryBank.GetFreeMem();
+        return m_FreeMemCached;
     }
     virtual U32 GetFragments() {
-        // return m_MemoryBank.GetNbFreeBlocks();
-        return 0;
+        return m_MemoryBank.GetNbFreeBlocks();
     }
     virtual U32 GetLargestFree() {
-        // return m_MemoryBank.GetLargestFree();
-        return 0;
+        return m_MemoryBank.GetLargestFree();
     }
     virtual U32 GetFrameNbAlloc() {
         return m_FrameNbAlloc;
@@ -76,24 +70,23 @@ public:
         return m_MaxMemUsed;
     }
     virtual void MarkMem(U32 a1) {
-        // m_MemoryBank.MarkMem(a1);
+        m_MemoryBank.MarkMem(a1);
     }
     virtual U32 ShowUnMarkedMem() {
-        // return m_MemoryBank.ShowUnMarkedMem();
-        return 0;
+        return m_MemoryBank.ShowUnMarkedMem();
     }
     virtual void ShowMostNbMalloc() {
-        // m_MemoryBank.ShowMostNbMalloc();
+        m_MemoryBank.ShowMostNbMalloc();
     }
     
     virtual void SetFitLimits(U32 low, U32 high) {
-        // m_MemoryBank.SetFitLimits(low, high);
+        m_MemoryBank.SetFitLimits(low, high);
     }
     
     virtual void SetBestBit(bool bit) {
-        // m_MemoryBank.SetBestBit(bit);
+        m_MemoryBank.SetBestBit(bit);
     }
-    virtual void VerifyMem();
+    virtual bool VerifyMem();
     virtual void SetCallStackPtrs(U32* a1, S32 a2){
         memset(a1, 0, 32);
     }
@@ -128,10 +121,8 @@ void operator delete[](void* ptr);
 
 void operator delete[](void* ptr, const Char* comment, const Char* filename, S32 line);
 
-#endif
-
 U32 MemoryGraphColor();
-void Z_Verify();
+bool Z_Verify();
 
 void Z_SetBestBit(bool bit);
 

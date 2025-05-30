@@ -44,4 +44,7 @@ template<int size>  class assert_test{};
 #define	ASSERTC_Z(exp,...)			do { Bool bnExp = (exp); __analysis_assume(bnExp); if(!bnExp) ExceptionBool_Z(FALSE,FALSE,#exp,__FILE__,__LINE__,__VA_ARGS__); } while (0)
 #define	ASSERT_Z(exp)				do { Bool bnExp = (exp); __analysis_assume(bnExp); if(!bnExp) ExceptionBool_Z(FALSE,FALSE,#exp,__FILE__,__LINE__,"");          } while (0)
 
+#define	EXCEPT_Z(exp,...)			do { ExceptionBool_Z(FALSE,exp,#exp,__FILE__,__LINE__,__VA_ARGS__); } while (0)
+#define	EXCEPTC_Z(exp,...)			do { ExceptionBool_Z(FALSE,exp,#exp,__FILE__,__LINE__,__VA_ARGS__); } while (0)
+
 #endif //__ASSERT_Z_H__

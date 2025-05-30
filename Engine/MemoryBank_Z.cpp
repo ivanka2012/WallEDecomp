@@ -45,5 +45,183 @@ MemoryBank_Z::FindAlloc(void *,void *)	__text	002019BC	00000064	0000023C	0000000
 MemoryBank_Z::ShowUnMarkedMem(void)	__text	00201A20	00000120	0000022C	00000004	R	.	.	.	.	.	B	T	.
 */
 
+#include <MemoryBank_Z.h>
+
 // This class is not fun... it has nothing to do with Mac WALL-E but it's crucial for console ports...
 // Thanks to vtables this didn't get stripped out by the linker
+
+U32 MemoryBank_Z::GetAllocatedMem() {
+    return 0;
+}
+
+U32  MemoryBank_Z::GetNbFreeBlocks() {
+    return 0;
+}
+
+MemoryBank_Z::MemoryBank_Z() {
+
+}
+
+MemoryBank_Z::~MemoryBank_Z() {
+
+}
+
+void MemoryBank_Z::SetBestBit(bool) {
+
+}
+
+U32 MemoryBank_Z::FindBucket(S32) {
+    return 0;
+}
+
+Bool MemoryBank_Z::CheckBlock(MemoryBlock_Z *) {
+    return 0;
+}
+
+Bool MemoryBank_Z::CheckBuckets() {
+    return 0;
+}
+
+void MemoryBank_Z::SetFitLimits(U32,U32) {
+
+}
+
+U32 MemoryBank_Z::GetFreeMem() {
+    return 0;
+}
+
+U32 MemoryBank_Z::GetLargestFreeBlock() {
+    return 0;
+}
+
+U32 MemoryBank_Z::GetLargestFree() {
+    return 0;
+}
+
+U32 MemoryBank_Z::FindFirstBlock(S32) {
+    return 0;
+}
+
+U32 MemoryBank_Z::Dicho_RecEqual(MemoryBlock_Z **,U32,S32,S32) {
+    return 0;
+}
+
+U32 MemoryBank_Z::GetInBucket(S32,MemoryBlock_Z *) {
+    return 0;
+}
+
+void MemoryBank_Z::RemoveBlockFromBucket(S32,MemoryBlock_Z *) {
+
+}
+
+void MemoryBank_Z::RemoveBlock(MemoryBlock_Z *) {
+
+}
+
+Bool MemoryBank_Z::FindSomeBlock(MemoryBlock_Z *) {
+    return 0;
+}
+
+bool MemoryBank_Z::TestIntegrity(MemoryBlock_Z *) {
+
+}
+
+U32 MemoryBank_Z::Dicho_RecAfter(MemoryBlock_Z **,U32,S32,S32) {
+    return 0;
+}
+
+void MemoryBank_Z::AddBlockToBucket(S32,MemoryBlock_Z *) {
+
+}
+
+void MemoryBank_Z::AddBlock(MemoryBlock_Z *) {
+
+}
+
+void MemoryBank_Z::SplitToAllocAndFreeBlock(MemoryBlock_Z *,U32) {
+
+}
+
+void MemoryBank_Z::Init(void *,U32) {
+
+}
+
+U32 MemoryBank_Z::Dicho_RecBigger(MemoryBlock_Z **,U32,S32,S32) {
+    return 0;
+}
+
+U32 MemoryBank_Z::FindBlock(S32,S32) {
+    return 0;
+}
+
+U32 MemoryBank_Z::FindBestBlock(S32) {
+    return 0;
+}
+
+U32 MemoryBank_Z::FindBlock(S32) {
+    return 0;
+}
+
+void* MemoryBank_Z::Malloc(U32,const Char*,const Char*,U32,U32) {
+    return 0;
+}
+
+void MemoryBank_Z::Extend() {
+
+}
+
+U32 MemoryBank_Z::MergeWithNextRealloc(void *,U32) {
+    return 0;
+}
+
+void* MemoryBank_Z::Malloc_end(U32,U32,const Char*) {
+    return 0;
+}
+
+void MemoryBank_Z::Free(void *) {
+
+}
+
+void* MemoryBank_Z::FullRealloc(void *,U32,const Char*) {
+    return 0;
+}
+
+void* MemoryBank_Z::Realloc(void *,U32,const Char*) {
+    return 0;
+}
+
+bool MemoryBank_Z::VerifyMem() {
+    return false;
+}
+
+U32 MemoryBank_Z::GetNbFindAlloc(void *,void *) {
+    return 0;
+}
+
+void MemoryBank_Z::ShowMostNbMalloc() {
+
+}
+
+void MemoryBank_Z::MarkMem(U32) {
+
+}
+
+U32 MemoryBank_Z::GetUserSize(MemoryBlock_Z *) {
+    return 0;
+}
+
+void MemoryBank_Z::GetCommentText(char *,MemoryBlock_Z *) {
+
+}
+
+void* MemoryBank_Z::GetFindAlloc(S32,char *,void *,void *) {
+    return 0;
+}
+
+void* MemoryBank_Z::FindAlloc(void *,void *) {
+    return 0;
+}
+
+U32 MemoryBank_Z::ShowUnMarkedMem() {
+    return 0;
+}

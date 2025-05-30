@@ -39,13 +39,13 @@ Hi_MemoryManager_Z::~Hi_MemoryManager_Z()	__text	00062890	00000032	0000001C	0000
 #include <Program_Z.h>
 
 void Hi_MemoryManager_Z::Init() {
-    /*m_FreeMemCached = (U32)m_HeapEnd - (U32)m_HeapBase;
+    m_FreeMemCached = (U32)m_HeapEnd - (U32)m_HeapBase;
     m_MemoryBank.Init(m_HeapBase, m_FreeMemCached);
     m_NbAlloc = 0;
     m_FrameNbAlloc = 0;
     m_FreeMemCached = m_MemoryBank.GetFreeMem();
     m_MaxMemUsed = 0;
-    m_AllocTimer = 0.0f;*/
+    m_AllocTimer = 0.0f;
 }
 
 void Hi_MemoryManager_Z::Shut() {
@@ -54,7 +54,7 @@ void Hi_MemoryManager_Z::Shut() {
     if (NbLeak != 1) {
         ShowMostNbMalloc();
     }
-    ASSERTC_Z(NbLeak == 1, "Leaks Found");
+    EXCEPTC_Z(NbLeak==1, "Leaks Found"); //I am not sure about this one... was ExceptionBool_Z called here raw or am I missing something?
 }
 
 Hi_MemoryManager_Z::Hi_MemoryManager_Z() {
@@ -66,51 +66,45 @@ Hi_MemoryManager_Z::~Hi_MemoryManager_Z() {
 
 }
 
-void Hi_MemoryManager_Z::VerifyMem() {
-    // m_MemoryBank.VerifyMem();
+bool Hi_MemoryManager_Z::VerifyMem() {
+    return m_MemoryBank.VerifyMem();
 }
 
 void* Hi_MemoryManager_Z::Alloc(U32 i_Size, const Char* i_Comment, const Char* i_File, S32 i_Line, U32 i_Align) {
-    // void* l_Mem = m_MemoryBank.Malloc(i_Size, i_Comment, i_File, i_Line, i_Align);
-    // m_NbAlloc++;
-    // m_FrameNbAlloc++;
-    // return l_Mem;
-    return NULL;
+    void* l_Mem = m_MemoryBank.Malloc(i_Size, i_Comment, i_File, i_Line, i_Align);
+    m_NbAlloc++;
+    m_FrameNbAlloc++;
+    return l_Mem;
 }
 
 void* Hi_MemoryManager_Z::AllocEnd(U32 i_Size, const Char* i_Comment, const Char* i_File, S32 i_Line, U32 i_Align) {
-    // void* l_Mem = m_MemoryBank.Malloc_end(i_Size, i_Align, i_Comment);
-    // m_NbAlloc++;
-    // m_FrameNbAlloc++;
-    // return l_Mem;
-    return NULL;
+    void* l_Mem = m_MemoryBank.Malloc_end(i_Size, i_Align, i_Comment);
+    m_NbAlloc++;
+    m_FrameNbAlloc++;
+    return l_Mem;
 }
 
 void* Hi_MemoryManager_Z::FindAlloc(void* i_RangeStart, void* i_RangeEnd) {
-    //return m_MemoryBank.FindAlloc(i_RangeStart, i_RangeEnd);
-    return NULL;
+    return m_MemoryBank.FindAlloc(i_RangeStart, i_RangeEnd);
 }
 
 U32 Hi_MemoryManager_Z::FindAllocNb(void* i_RangeStart, void* i_RangeEnd) {
-    //return m_MemoryBank.GetNbFindAlloc(i_RangeStart, i_RangeEnd);
-    return 0;
+    return m_MemoryBank.GetNbFindAlloc(i_RangeStart, i_RangeEnd);
 }
 
 void* Hi_MemoryManager_Z::FindAllocID(S32 i_AllocID, Char* i_ResultDescription, void* i_RangeStart, void* i_RangeEnd) {
-    //return m_MemoryBank.GetFindAlloc(i_AllocID, i_ResultDescription, i_RangeStart, i_RangeEnd);
-    return NULL;
+    return m_MemoryBank.GetFindAlloc(i_AllocID, i_ResultDescription, i_RangeStart, i_RangeEnd);
 }
 
 void* Hi_MemoryManager_Z::Realloc(void* i_Ptr, U32 i_Size, const Char* i_Comment, const Char* i_File, S32 i_Line) {
-    // void* l_Mem = m_MemoryBank.Realloc(i_Ptr, i_Size, i_Comment);
-    // m_FrameNbAlloc++;
-    // return l_Mem;
-    return NULL;
+    void* l_Mem = m_MemoryBank.Realloc(i_Ptr, i_Size, i_Comment);
+    m_FrameNbAlloc++;
+    return l_Mem;
 }
 
 void Hi_MemoryManager_Z::Free(void* i_Ptr) {
     if (!i_Ptr) return;
-    //m_MemoryBank.Free(i_Ptr);
+    m_MemoryBank.Free(i_Ptr);
     m_NbAlloc--;
 }
 
@@ -139,7 +133,7 @@ void Hi_MemoryManager_Z::PrintStatus() {
     GetFreeMem();
     GetHeapSize();
     GetHeapSize();
-    // m_MemoryBank.ShowMostNbMalloc();
+    m_MemoryBank.ShowMostNbMalloc();
 }
 
 
@@ -151,8 +145,8 @@ U32 MemoryGraphColor() {
     return FALSE;
 }
 
-void Z_Verify() {
-    MemManager.VerifyMem();
+bool Z_Verify() {
+    return MemManager.VerifyMem();
 }
 
 void Z_SetBestBit(bool bit){
