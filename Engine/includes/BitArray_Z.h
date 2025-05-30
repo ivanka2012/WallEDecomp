@@ -2,12 +2,31 @@
 #include <DynArray_Z.h>
 
 class BitArray_Z{
-    DynArray_Z<U32> bits;
+    U32DA bits;
     S32 bitsSize;
 public:
-    BitArray_Z(S32 size);
+    BitArray_Z();
+    BitArray_Z(S32 i_Size);
+    // BitArray_Z(const BitArray_Z& i_Src);
+    ~BitArray_Z();
+    // BitArray_Z& operator=(const BitArray_Z& i_Src);
+    
+    void SetAllBits();
+    void ClearAllBits();
+    void ClearBitRange(S32 i_StartIndex, S32 i_EndIndex);
+    S32 FindFirstBit(bool i_State = TRUE, S32 i_firstBitToCheck = 0) const;
+    S32 FindLastBit(bool i_State, S32 i_firstBitToCheck) const;
 
-    void SetSize(S32 size){
+    inline void Minimize() {
+        bits.Minimize();
+    }
+
+    inline void Flush() {
+        bits.Flush();
+        bitsSize = 0;
+    }
+
+    inline void SetSize(S32 size){
         bitsSize = size;
         S32 sizeInWords = (size >> 5) + 1;
         if(size && sizeInWords > bits.GetSize()){
@@ -15,7 +34,18 @@ public:
         }
     }
 
-    void ClearAllBits();
+    inline S32 GetSize() const { return bitsSize; }
 
-    S32	FindFirstBit(Bool state=1,S32 firstBit=0) const;
+    inline U32 GetBit(S32 i_Bit) const {
+        const U32DA& l_Bits = bits;
+        return (l_Bits.Get(i_Bit >> 5)) & (1 << (i_Bit & 0x1F));
+    }
+
+    inline void SetBit(S32 i_Bit) {
+        bits[i_Bit >> 5] |= (1 << (i_Bit & 0x1F));
+    }
+
+    inline void ClearBit(S32 i_Bit) {
+        bits[i_Bit >> 5] &= ~(U32)(1 << (i_Bit & 0x1F));
+    }
 };
