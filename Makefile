@@ -7,13 +7,6 @@ ENGINE_CXXSRC = \
 	LibMAC/AssertMAC_Z.cpp \
 	LibMAC/FontMAC_Z.cpp \
 	LibMAC/FlareMAC_Z.cpp \
-	LibMAC/HID_Util/HID_Config_Utilities.c \
-	LibMAC/HID_Util/HID_Error_Handler.c \
-	LibMAC/HID_Util/HID_Name_Lookup.c \
-	LibMAC/HID_Util/HID_Queue_Utilities.c \
-	LibMAC/HID_Util/HID_Transaction_Utilities.c \
-	LibMAC/HID_Util/HID_Utilities.c \
-	LibMAC/HID_Util/ImmrHIDUtilAddOn.c \
 	LibMAC/ImaAdpcmCodec.cpp \
 	LibMAC/InGameObjectsMAC_Z.cpp \
 	LibMAC/LodMAC_Z.cpp \
@@ -37,7 +30,6 @@ ENGINE_CXXSRC = \
 	LibMAC/MACSoundStream_Z.cpp \
 	LibMAC/MACSound_Z.cpp \
 	LibMAC/MACStream_Z.cpp \
-	LibMAC/MACStreamManager_Z.cpp \
 	LibMAC/MACStreamManager_Z.cpp \
 	LibMAC/MACString_Z.cpp \
 	LibMAC/MaterialMAC_Z.cpp \
@@ -251,6 +243,7 @@ ENGINE_CXXSRC = \
 	Engine/Private/WarpLoad_Z.cpp \
 	Engine/Private/WorldDraw_Z.cpp \
 	Engine/Private/WorldLoad_Z.cpp \
+	Engine/Program_Z.cpp \
 	Engine/RotShape_Z.cpp \
 	Engine/RotShapeDraw_Z.cpp \
 	Engine/RtcAgent_Z.cpp \
@@ -442,7 +435,6 @@ ENGINE_CXXSRC = \
 	Wall_E/CameraChase.cpp \
 	Wall_E/BaseInGameDatas_G.cpp \
 	Wall_E/Classes.cpp \
-	Wall_E/ScriptManager_G.cpp \
 	Wall_E/AutoCompletion_G.cpp \
 	Wall_E/BaseInGame3D.cpp \
 	Wall_E/IT_COLLECT_G.cpp \
@@ -734,7 +726,6 @@ ENGINE_CXXSRC = \
 	Wall_E/UmbrellaBot.cpp \
 	Wall_E/VacuumBot.cpp \
 	Wall_E/Mission_MultiContainer.cpp \
-	Engine/PackerArith_Z.cpp \
 	Engine/ArithmeticCoderC.cpp \
 	Engine/ModelOrder0C.cpp  \
 	Engine/ModelOrder1C.cpp \
@@ -768,31 +759,44 @@ ENGINE_CXXSRC = \
 	Wall_E/Dialog_ControlsBonusCheck.cpp \
 	Wall_E/Dialog_ControlsBonusDescent.cpp
 HEADERS = $(wildcard *.h *.hpp Engine/includes/*.h Engine/includes/*.hpp LibMAC/HID_Util/*.h LibMAC/HID_Util/*.hpp LibMAC/tinyxml/*.h LibMAC/tinyxml/*.hpp LibMAC/includes/*.h LibMAC/includes/*.hpp)
-ENGINE_CXXOBJS = $(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(ENGINE_CXXSRC)))
-ENGINE_DEPENDS := $(patsubst %.c,%.d,$(patsubst %.cpp,%.d,$(ENGINE_CXXSRC)))
-ENGINE_ASMOBJS = $(patsubst %.c,%.s,$(patsubst %.cpp,%.s,$(ENGINE_CXXSRC)))
+ENGINE_CXXOBJS := $(patsubst %.cpp,%.o,$(ENGINE_CXXSRC))
+ENGINE_DEPENDS := $(patsubst %.cpp,%.d,$(ENGINE_CXXSRC))
+ENGINE_ASMOBJS := $(patsubst %.cpp,%.s,$(ENGINE_CXXSRC))
+
+
+HIDUTILS_CXXSRC = \
+	LibMAC/HID_Util/HID_Config_Utilities.c \
+	LibMAC/HID_Util/HID_Error_Handler.c \
+	LibMAC/HID_Util/HID_Name_Lookup.c \
+	LibMAC/HID_Util/HID_Queue_Utilities.c \
+	LibMAC/HID_Util/HID_Transaction_Utilities.c \
+	LibMAC/HID_Util/HID_Utilities.c \
+	LibMAC/HID_Util/ImmrHIDUtilAddOn.c
+HIDUTILS_CXXOBJS := $(patsubst %.c,%.o,$(HIDUTILS_CXXSRC))
+HIDUTILS_DEPENDS := $(patsubst %.c,%.d,$(HIDUTILS_CXXSRC))
+HIDUTILS_ASMOBJS := $(patsubst %.c,%.s,$(HIDUTILS_CXXSRC))
 
 .PHONY: all
 all: objects
 
--include $(ENGINE_DEPENDS)
+-include $(ENGINE_DEPENDS) $(HIDUTILS_DEPENDS)
 
-LibMAC/HID_Util/%.s: LibMAC/HID_Util/%.c
-	$(CXX) -MMD -MP -c $< -S -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS) 2> /dev/null # shut the fuck up, I know it's bad
+$(HIDUTILS_ASMOBJS): LibMAC/HID_Util/%.s: LibMAC/HID_Util/%.c
+	$(CXX) -MMD -c $< -S -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS) 2> /dev/null # shut the fuck up, I know it's bad
 
-%.s: %.cpp
-	$(CXX) -MMD -MP -c $< -S -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS)
+$(ENGINE_ASMOBJS): %.s: %.cpp
+	$(CXX) -MMD -c $< -S -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS)
 
 
-LibMAC/HID_Util/%.o: LibMAC/HID_Util/%.s LibMAC/HID_Util/%.c
+$(HIDUTILS_CXXOBJS): LibMAC/HID_Util/%.o: LibMAC/HID_Util/%.s LibMAC/HID_Util/%.c
 	$(CXX) -c $< -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS) 2> /dev/null # shut the fuck up, I know it's bad
 	
-%.o: %.s %.cpp
+$(ENGINE_CXXOBJS): %.o: %.s %.cpp
 	$(CXX) -c $< -D_ALLOCDEFAULTALIGN=16 -o $@ $(CXXFLAGS)
 
 
-ZOUNA: $(ENGINE_CXXOBJS)
-	g++ $(ENGINE_CXXOBJS) -framework Carbon -framework IOKit -o ZOUNA.executable
+ZOUNA: $(ENGINE_CXXOBJS) $(HIDUTILS_CXXOBJS)
+	g++ $(ENGINE_CXXOBJS) $(HIDUTILS_CXXOBJS) -framework Carbon -framework IOKit -o ZOUNA.executable
 	strip -o ZOUNA.stripped.executable -x ZOUNA.executable
 
 objects: ZOUNA
