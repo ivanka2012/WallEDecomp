@@ -36,14 +36,14 @@ There are a few words that might confuse newcomers. Here are they:
 ## Build
 
 If you want to build this project, you'll need to have the following:
-- A machine with OS X 10.4 (Tiger) installed. 10.5 and 10.6 might also work.
+- A machine with OS X 10.4 (Tiger) installed. You'll probably want an x86 machine. Newer version might also work, like 10.5 and 10.6.
 - Xcode 2.4 (not 2.4.1!). In Xcode, the only parts that are necessary are the OS X SDK, Apple's fork of gcc (version 5363), Apple's own linker (`ld`), assembler (`as`), strip tool (`strip`), and Make. These may or may not have toggleable options in the Xcode installer.
 
 Once you have all of that, copy the contents of this repository to the OS X machine, open the Terminal app on the OS X machine, navigate to the directory of the copied repository and do this:
 
 `make`
 
-You should now have two binaries: `ZOUNA.executable` and `ZOUNA.stripped.executable`. You'll probably want to match against `ZOUNA.executable`, as `ZOUNA.stripped.executable` has the exact same `strip -x` command ran on it as WALL-E Mac's game executable that was RtM.
+You should now have two binaries: `ZOUNA.executable` and `ZOUNA.stripped.executable`. These binaries, if everything went right, should have been compiled for the Intel x86 architecture. You'll probably want to match against `ZOUNA.executable`, as `ZOUNA.stripped.executable` has the exact same `strip -x` command ran on it as WALL-E Mac's game executable that was RtM.
 
 ## License
 
