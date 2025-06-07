@@ -14,8 +14,11 @@ There are no decompilation tools available to the public yet. They are simply no
 
 If you want to build this project, you'll need to have the following:
 - A machine with OS X 10.4 (Tiger) installed. 10.5 and 10.6 might also work.
-- Xcode 2.4 (not 2.4.1!). In Xcode, the only parts that are necessary are Apple's fork of gcc (version 5363), Apple's own linker (`ld`), assembler (`as`), strip tool (`strip`), and Make.
+- Xcode 2.4 (not 2.4.1!). In Xcode, the only parts that are necessary are the OS X SDK, Apple's fork of gcc (version 5363), Apple's own linker (`ld`), assembler (`as`), strip tool (`strip`), and Make. These may or may not have toggleable options in the Xcode installer.
+
 Once you have all of that, copy the contents of this repository over to the OS X machine, open the Terminal app on the OS X machine, navigate to the directory of the copied repository and do this:
+
 `make`
+
 You should now have two binaries: `ZOUNA.executable` and `ZOUNA.stripped.executable`. You'll probably want to match against `ZOUNA.executable`, as `ZOUNA.stripped.executable` has the exact same `strip -x` command ran on it as WALL-E Mac's game executable that was RtM.
 
