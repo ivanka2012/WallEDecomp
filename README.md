@@ -16,9 +16,22 @@ In addition to that, the insurmountable goal of decompiling ~17000 functions wil
 
 ## Contribution
 
+You'll need the WALL-E disc released in the UK. Open the HFS+ partition on it and extract the x86 game executable from WALL-E.pkg.
+
 There are no tools available to the public yet. Tools like tracking progress and seeing differences between disassemblies, not the disassembler used. They are simply not written to be easily distributable. 
 
 This project needs people who can grab a disassembler and start decompiling. **If you are interested in contributing to this project and want to get your hands on the tools used for decompiling this game, please message theb4n4n4 (actual name: b4n4n4) on Discord.** You do not have to add me as a friend if you join the [Zouna Underground Discord server](https://discord.gg/CQgMNbYeUR).
+
+## Dictionary
+
+There are a few words that might confuse newcomers. Here are they:
+
+| **Term** | **What do *we* mean by it** |
+| --- | --- |
+| **Asobo** | The principal developer behind this game. In this project, the code is the most interesting part of the game, and they were responsible for the code of the WALL-E game on the PC, the Mac and the PS2. |
+| **THQ** | The original publisher of the WALL-E game. |
+| **Disney** | Currently the publishers of the WALL-E game on Steam. If there's an entity legally concerned with this effort, it's them. |
+| **ZOUNA** | This is the game engine of WALL-E. It powers most of Asobo's games, including their most recent releases as of date, Microsoft Flight Simulator 2020 and 2024 and the "A Plague Tale" series. | 
 
 ## Build
 
@@ -34,7 +47,7 @@ You should now have two binaries: `ZOUNA.executable` and `ZOUNA.stripped.executa
 
 ## License
 
-The decompiled source code in this repository is non-free. [I](https://github.com/ivanka2012) have no idea who it belongs to. Disney? Asobo? THQ's liquidators? *[me](https://github.com/ivanka2012)*?
+**The decompiled source code in this repository is non-free.** [I](https://github.com/ivanka2012) have no idea who it belongs to. Disney? Asobo? THQ's liquidators? *[me](https://github.com/ivanka2012)*?
 
 Parts of the source code are from the [Microsoft Mixed Reality Toolkit](https://github.com/microsoft/MixedRealityToolkit/tree/main/SpatialUnderstanding/Src/Engine), which uses the MIT license. This contains a bunch of snippets from an early 2010's version of Asobo's ZOUNA fork. It has a few minor changes but it's very close to WALL-E's ZOUNA. How that got uploaded there, slapped on an MIT license and still be up 10 years later is beyond [me](https://github.com/ivanka2012). [I](https://github.com/ivanka2012) like this reference the most because it's straight from the horse's mouth.
 
