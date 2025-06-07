@@ -2,9 +2,9 @@
 
 This is the GitHub repository that contains all the decompiled code for WALL-E (2008), the video game. Specifically, for the Macintosh version of the game.
 
-Watch snippets of [this video](https://www.youtube.com/watch?v=vGgQldClnlU) to get an idea of this game.
+Watch snippets of [this video](https://www.youtube.com/watch?v=vGgQldClnlU) to get an idea of this game. Here's the [best any% speedrun](https://www.youtube.com/watch?v=djjySx_QwxQ) of the PC version of this game.
 
-The PC and Macintosh versions of the game are virtually indistinguishable, say for the Macintosh version being compiled and suited for running on Macintoshes in 2008, both the PowerPC and Intel x86 variants.
+The PC and Macintosh versions of the WALL-E game are virtually indistinguishable, say for the Macintosh version being compiled and suited for running on Macintoshes in 2008, both the PowerPC and Intel x86 variants.
 
 And if you wonder, the Mac build of this game is so obscure that it's usually left out from the list of platforms that the game is available on or considered the same to the PC version. *[I](https://github.com/ivanka2012) wouldn't fault those who forget about this version of the game.*
 
@@ -31,7 +31,7 @@ There are a few words that might confuse newcomers. Here are they:
 | **Asobo** | The principal developer behind this game. In this project, the code is the most interesting part of the game, and they were responsible for the code of the WALL-E game on the PC, the Mac and the PS2. |
 | **THQ** | The original publisher of the WALL-E game. |
 | **Disney** | Currently the publishers of the WALL-E game on Steam. If there's an entity legally concerned with this effort, it's them. |
-| **ZOUNA** | This is the game engine of WALL-E. It powers most of Asobo's games, including their most recent releases as of date, Microsoft Flight Simulator 2020 and 2024 and the "A Plague Tale" series. | 
+| **ZOUNA** | This is the game engine of WALL-E. It powers most of Asobo's games, including their most recent releases as of date, Microsoft Flight Simulator 2020 and 2024 and the "A Plague Tale" series. [Read this](https://github.com/widberg/fmtk/wiki/TotemTech-ToonTech-Zouna-ACE-BSSTech-Opal-Timeline) to get a full rundown. | 
 
 ## Build
 
@@ -53,4 +53,4 @@ Parts of the source code are from the [Microsoft Mixed Reality Toolkit](https://
 
 Parts of the source code are lifted from [the Ratatouille (GBC) decompilation project](github.com/ZounaDecomp/RatDecomp). Thanks Vi and Sabe!
 
-Parts of the source code are from ZOUNA.rar, the engine source code for [Shaun White Snowboarding](https://en.wikipedia.org/wiki/Shaun_White_Snowboarding). It also uses ZOUNA, the game engine for WALL-E. *Before you get your hopes up too high, this game has way too many differences compared to WALL-E because it's Ubisoft's fork, not Asobo's. It's a useful reference, but personally [I](https://github.com/ivanka2012) wouldn't bet my life on decompiling WALL-E on this reference alone.*
+Parts of the source code are from ZOUNA.rar which contains most of the engine source code for [Shaun White Snowboarding](https://en.wikipedia.org/wiki/Shaun_White_Snowboarding). It also uses ZOUNA, the game engine for WALL-E. *Before you get your hopes up too high, this game has way too many differences compared to WALL-E because it's Ubisoft's fork, not Asobo's. It's a useful reference, but personally [I](https://github.com/ivanka2012) wouldn't bet my life on decompiling WALL-E on this reference alone.*
