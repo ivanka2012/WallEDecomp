@@ -43,7 +43,8 @@ FINLINE_Z	Float Sin(Float x)
 #endif
 }
 
-FINLINE_Z	void  SinCos(Vec2f& r,Float x)	
+//Apparently it's not force inlined... go figure
+/*FINLINE_Z*/ INLINE_Z	void  SinCos(Vec2f& r,Float x)	
 {
 	r.x = sinf(x);
 	r.y = cosf(x);
@@ -53,18 +54,22 @@ FINLINE_Z	Float Tan(Float a)				{return tanf(a);}
 
 FINLINE_Z	Float ACos(Float value)
 {
+#if 0 
 #ifndef	_MASTER
 	EXCEPTIONC_Z(value<=1.f,"ACos(%f)", value);
 	EXCEPTIONC_Z(value>=-1.f,"ACos(%f)", value);
+#endif
 #endif
 	return acosf( value );
 }
 
 FINLINE_Z	Float ASin(Float value)
 {
+#if 0
 #ifndef	_MASTER
 	EXCEPTIONC_Z(value<=1.f,"ASin(%f)",value);
 	EXCEPTIONC_Z(value>=-1.f,"ASin(%f)",value);
+#endif
 #endif
 	return asinf( value );
 }

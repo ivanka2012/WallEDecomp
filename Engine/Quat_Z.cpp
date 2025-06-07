@@ -134,7 +134,8 @@ Quat	&Quat::operator= (const Vec3f &RV)
 	Float	_w=RV.GetNorm();
 	if (_w<Float_Eps)
 	{
-		xyzw().SetDefault();
+		xyz() = VEC3F_NULL;
+		w = 1.f;
 		return *this;
 	}
 
@@ -240,7 +241,7 @@ Quat Quat::operator* ( const Float f) const
 	{
 		Float	s=Sqrt(1.f-w2);
 		Vec2f	Toto;
-		ASSERTC_Z((w <= 1.f) && (w >= -1.f),"ACOS will bug with val >1.f");
+		//ASSERTC_Z((w <= 1.f) && (w >= -1.f),"ACOS will bug with val >1.f");
 		SinCos(Toto,ACos(w)*f);
 		Quat	r;
 		r.v=v*(Toto.x/s);

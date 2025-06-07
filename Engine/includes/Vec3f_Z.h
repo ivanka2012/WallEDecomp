@@ -37,7 +37,9 @@ struct  Vec3f
 	explicit Vec3f( const Float _xyz );
 	Vec3f( const Float _x, const Float _y, const Float _z );
 	Vec3f( const VecFloat4&_v );
-	Vec3f( const Vec3f& v ) {x = v.x; y = v.y; z = v.z;}
+	//THIS IS NOT DEFINED AT ALL!!!
+	//See: memmove in Quat::operator*(float). It wouldn't be there if this was defined explicitly
+	//Vec3f( const Vec3f& v ) {x = v.x; y = v.y; z = v.z;}
 	////////////////////// � virer
 	explicit Vec3f( const Quat &Q );
 	explicit Vec3f( const Color &C );

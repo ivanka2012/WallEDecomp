@@ -70,7 +70,7 @@ typedef unsigned char				Bool;
 
 // -------------------------------------------------------------------------
 
-#if defined(_MSC_VER)
+/*#if defined(_MSC_VER)
 	#define	FINLINE_Z			__forceinline
 	#define	INLINE_Z			inline
 #else
@@ -88,7 +88,11 @@ typedef unsigned char				Bool;
 	#else
 		#define	INLINE_Z			inline
 	#endif
-#endif
+#endif*/
+
+// No more stupid macros for now! We'll assume GCC
+#define	FINLINE_Z		__attribute__((always_inline)) inline
+#define	INLINE_Z		inline
 
 #define RESTRICT_Z
 

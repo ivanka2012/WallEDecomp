@@ -66,6 +66,20 @@ SegmentVsCylindre(Segment_Z const&,Cylindre_Z const&,CollisionReport_Z &)	__text
 
 #define cbrt(x) ((x) > 0.0 ? pow((float)(x), 1.0f / 3.0f) : ((x) < 0.0 ? -pow((float)-(x), 1.0f / 3.0f) : 0.0))
 
+/**
+ * Here's where you need to start debugging dumb stack problems: ix86_compute_frame_layout, Apple gcc 5370
+ * padding1 seems kinda sus: it's 8, and that's why everything gets spilled 
+ * 
+ * Stack alignments get fucked for some reason. You'll want to see passes.c:1724
+ * 
+ * It's uses_vector
+ * 
+ * ix86_build_signbit_mask
+ * 
+ * So uses_vector forces the alignment to 128 bits when it sees a negation operator... wait... why is it not aligned in our case?
+ * forced alignment is a thing. Let's try that.
+ */
+
 int SolveQuadric(double *c, double *s)
 {
 	double p, q, D;
@@ -390,6 +404,7 @@ struct Capsule_Z
  * 
  * Update 2025-01-25T18:22:52Z: Well, it's not THAT obvious. Make sure to take out p1.xyz(), that Vec3f has a copy constructor AND the Vec3f subtract operator to not take a reference but a regular Vec3f. I am not convinced that this is what Asobo did but it is semantically identical to their solution. Now let's see how this broke the other functions...
  * 
+ * 2025-06-06T17:04:33Z: There is no copy constructor (in Float3). It's something else.
  */
 Bool MovingSphereVsQuad(const Capsule_Z &Cap, const Vec4f &p1, const Vec4f &p2, const Vec4f &p3, const Vec4f &p4,
 						CollisionReport_Z &Report)

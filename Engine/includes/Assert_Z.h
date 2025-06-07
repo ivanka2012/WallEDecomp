@@ -41,8 +41,8 @@ template<>          class COMPILER_ASSERT<TRUE> { enum { dummy }; };
 template<int size>  class assert_test{};
 
 #define ASSERT_AT_COMPILE_TIME_Z(test) typedef assert_test<sizeof(COMPILER_ASSERT<(test)>)> CONCAT(dummy,__LINE__)
-#define	ASSERTC_Z(exp,...)			do { Bool bnExp = (exp); __analysis_assume(bnExp); if(!bnExp) ExceptionBool_Z(FALSE,FALSE,#exp,__FILE__,__LINE__,__VA_ARGS__); } while (0)
-#define	ASSERT_Z(exp)				do { Bool bnExp = (exp); __analysis_assume(bnExp); if(!bnExp) ExceptionBool_Z(FALSE,FALSE,#exp,__FILE__,__LINE__,"");          } while (0)
+#define	ASSERTC_Z(exp,...)			do { Bool bnExp = (Bool)(exp); __analysis_assume(bnExp); if(!bnExp) ExceptionBool_Z(FALSE,FALSE,#exp,__FILE__,__LINE__,__VA_ARGS__); } while (0)
+#define	ASSERT_Z(exp)				do { Bool bnExp = (Bool)(exp); __analysis_assume(bnExp); if(!bnExp) ExceptionBool_Z(FALSE,FALSE,#exp,__FILE__,__LINE__,"");          } while (0)
 
 #define	EXCEPT_Z(exp,...)			do { ExceptionBool_Z(FALSE,exp,#exp,__FILE__,__LINE__,__VA_ARGS__); } while (0)
 #define	EXCEPTC_Z(exp,...)			do { ExceptionBool_Z(FALSE,exp,#exp,__FILE__,__LINE__,__VA_ARGS__); } while (0)

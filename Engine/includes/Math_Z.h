@@ -30,7 +30,7 @@ class BoneNode_Z;
 #define	SQR_Z(a)		( (a)*(a) )
 
 #undef	M_PI
-#define M_PI		3.14159265358979323846f
+#define M_PI		3.14159265358979323846 //M_PI is a double. See cullPoints
 #undef	M_PI_2
 #define M_PI_2		1.57079632679489661923f
 #undef	M_PI_4

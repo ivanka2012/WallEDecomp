@@ -103,7 +103,7 @@ ModelOrder1C::ModelOrder1C(){
 		mCumCountLookback[i] = New_Z ArithProbaTable;
 		//This seems to be grammatically incorrect French. To machine translate: "Lack of memory allocation arithmetic packer".
 		//DU HAST NICHT MEMORY
-		ASSERTC_Z(mCumCountLookback[i], "Manque de mémoire allocation packer arithmetique");
+		EXCEPTC_Z(mCumCountLookback[i], "Manque de mémoire allocation packer arithmetique");
 	}
 }
 
