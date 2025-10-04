@@ -37,7 +37,7 @@ There are a few words that might confuse newcomers. Here are they:
 
 If you want to build this project, you'll need to have the following:
 - A machine with OS X 10.4 (Tiger) installed. You'll probably want an x86 machine. Newer version might also work, like 10.5 and 10.6.
-- Xcode 2.4 (not 2.4.1!). In Xcode, the only parts that are necessary are the OS X SDK, Apple's fork of gcc (version 5363), Apple's own linker (`ld`), assembler (`as`), strip tool (`strip`), and Make. These may or may not have toggleable options in the Xcode installer.
+- Xcode 2.5. In Xcode, the only parts that are necessary are the OS X SDK, Apple's fork of gcc (version 5370), Apple's own linker (`ld`), assembler (`as`), strip tool (`strip`), and Make. These may or may not have toggleable options in the Xcode installer.
 
 Once you have all of that, copy the contents of this repository to the OS X machine, open the Terminal app on the OS X machine, navigate to the directory of the copied repository and do this:
 
